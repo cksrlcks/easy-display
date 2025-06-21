@@ -1,11 +1,12 @@
-import fs from "fs";
-import path from "path";
-import os from "os";
 import { dialog, net, protocol, shell } from "electron";
-import { pathToFileURL } from "url";
 import express from "express";
-import { getLocalIp } from "./lib/network";
+import fs from "fs";
+import os from "os";
+import path from "path";
+import { pathToFileURL } from "url";
+
 import { InternalFile, IPCResponse } from "../types";
+import { getLocalIp } from "./lib/network";
 
 const MEDIA_FOLDER = path.join(os.homedir(), "Documents", "easy-display", "media");
 

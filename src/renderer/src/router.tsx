@@ -1,8 +1,9 @@
 import { createBrowserRouter } from "react-router";
+
 import App from "./App";
+import Display from "./routes/Display";
 import Media from "./routes/Media";
 import Screen from "./routes/Screen";
-import Display from "./routes/Display";
 
 export const router = createBrowserRouter([
   {

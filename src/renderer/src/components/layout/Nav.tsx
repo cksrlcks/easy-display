@@ -1,5 +1,5 @@
-import { NavLink } from "react-router";
 import { cn } from "@renderer/lib/utils";
+import { NavLink } from "react-router";
 
 const MENU_ITEMS = [
   { id: "media", path: "/", label: "미디어 관리" },

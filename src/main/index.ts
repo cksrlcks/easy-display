@@ -1,8 +1,8 @@
-import { app, BrowserWindow, ipcMain, Tray } from "electron";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
+import { app, BrowserWindow, ipcMain, Tray } from "electron";
+
 import icon from "../../resources/icon.png?asset";
-import { initializeTray } from "./tray";
-import { createWindow } from "./window";
+import { getLocalIp } from "./lib/network";
 import {
   copyFiles,
   deleteFile,
@@ -11,7 +11,8 @@ import {
   openMediaFolder,
   selectFiles,
 } from "./media";
-import { getLocalIp } from "./lib/network";
+import { initializeTray } from "./tray";
+import { createWindow } from "./window";
 
 export type State = {
   mainWindow: BrowserWindow | null;

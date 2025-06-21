@@ -1,4 +1,5 @@
-import { BrowserWindow, dialog, Menu, Tray, app } from "electron";
+import { app, BrowserWindow, dialog, Menu, Tray } from "electron";
+
 import icon from "../../resources/icon.png?asset";
 import { State } from ".";
 

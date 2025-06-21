@@ -1,5 +1,5 @@
-import { contextBridge, ipcRenderer } from "electron";
 import { electronAPI } from "@electron-toolkit/preload";
+import { contextBridge, ipcRenderer } from "electron";
 
 const api = {
   getFilesInMediaFolder: () => ipcRenderer.invoke("get-files-in-media-folder"),

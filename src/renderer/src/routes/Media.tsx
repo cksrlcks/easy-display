@@ -1,14 +1,5 @@
-import { useEffect, useState, useTransition } from "react";
-import { Badge } from "@renderer/components/ui/badge";
-import { Button } from "@renderer/components/ui/button";
-import { File, FolderOpen, HardDriveUpload } from "lucide-react";
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuSeparator,
-  ContextMenuTrigger,
-} from "@renderer/components/ui/context-menu";
+import "react-photo-view/dist/react-photo-view.css";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,9 +10,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@renderer/components/ui/alert-dialog";
+import { Badge } from "@renderer/components/ui/badge";
+import { Button } from "@renderer/components/ui/button";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@renderer/components/ui/context-menu";
 import { cn, isImageFile } from "@renderer/lib/utils";
+import { File, FolderOpen, HardDriveUpload } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
 import { PhotoProvider, PhotoView } from "react-photo-view";
-import "react-photo-view/dist/react-photo-view.css";
 import { toast } from "sonner";
 import { InternalFile } from "src/types";
 

@@ -29,6 +29,8 @@ export default tseslint.config(
       ...eslintPluginReactRefresh.configs.vite.rules,
       "@typescript-eslint/explicit-function-return-type": "off",
       "react-refresh/only-export-components": "off",
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
     },
   },
   eslintConfigPrettier,
