@@ -17,5 +17,13 @@ export default defineConfig({
       },
     },
     plugins: [react(), tailwindcss()],
+    server: {
+      proxy: {
+        "/media": {
+          target: "http://localhost:3000",
+          changeOrigin: true,
+        },
+      },
+    },
   },
 });
