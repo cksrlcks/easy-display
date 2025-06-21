@@ -1,10 +1,16 @@
 import { app, BrowserWindow, ipcMain, Tray } from "electron";
-
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import { initializeTray } from "./tray";
 import { createWindow } from "./window";
-import { getFilesInMediaFolder, initializeMedia } from "./media";
+import {
+  copyFiles,
+  deleteFile,
+  getFilesInMediaFolder,
+  initializeMedia,
+  openMediaFolder,
+  selectFiles,
+} from "./media";
 import { getLocalIp } from "./lib/network";
 
 export type State = {
@@ -69,5 +75,9 @@ app.on("before-quit", () => {
  */
 
 ipcMain.handle("get-files-in-media-folder", getFilesInMediaFolder);
+ipcMain.handle("open-media-folder", openMediaFolder);
+ipcMain.handle("select-files", selectFiles);
+ipcMain.handle("copy-to-media-folder", copyFiles);
+ipcMain.handle("delete-file", deleteFile);
 
 ipcMain.handle("get-local-ip", getLocalIp);

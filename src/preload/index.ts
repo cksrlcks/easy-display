@@ -4,6 +4,10 @@ import { electronAPI } from "@electron-toolkit/preload";
 const api = {
   getFilesInMediaFolder: () => ipcRenderer.invoke("get-files-in-media-folder"),
   getLocalIp: () => ipcRenderer.invoke("get-local-ip"),
+  openMediaFolder: () => ipcRenderer.invoke("open-media-folder"),
+  selectFiles: () => ipcRenderer.invoke("select-files"),
+  copyToMediaFolder: (filePaths: string[]) => ipcRenderer.invoke("copy-to-media-folder", filePaths),
+  deleteFile: (filePath: string) => ipcRenderer.invoke("delete-file", filePath),
 };
 
 if (process.contextIsolated) {
