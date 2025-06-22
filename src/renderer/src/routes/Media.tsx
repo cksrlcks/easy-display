@@ -1,51 +1,21 @@
 import "react-photo-view/dist/react-photo-view.css";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@renderer/components/ui/alert-dialog";
-import { Badge } from "@renderer/components/ui/badge";
+import { FileInfo, FileThumbnail } from "@renderer/components/File";
+import FileContextMenu from "@renderer/components/FileContextMenu";
+import PhotoView from "@renderer/components/PhotoView";
 import { Button } from "@renderer/components/ui/button";
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuSeparator,
-  ContextMenuTrigger,
-} from "@renderer/components/ui/context-menu";
-import { cn, isImageFile } from "@renderer/lib/utils";
-import { File, FolderOpen, HardDriveUpload } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
-import { PhotoProvider, PhotoView } from "react-photo-view";
+import useFetchMediaFiles from "@renderer/hooks/useFetchMediaFiles";
+import { cn } from "@renderer/lib/utils";
+import { FolderOpen, FolderSync, HardDriveUpload } from "lucide-react";
+import { useTransition } from "react";
+import { PhotoProvider } from "react-photo-view";
 import { toast } from "sonner";
-import { InternalFile } from "src/types";
 
 export default function Media() {
+  const { isPending: isFetchingMedias, medias, fetchMediaFiles } = useFetchMediaFiles();
   const [isPending, startTransition] = useTransition();
-  const [medias, setMedias] = useState<InternalFile[]>([]);
-  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchMediaFiles();
-  }, []);
-
-  const fetchMediaFiles = async () => {
-    startTransition(async () => {
-      const response = await window.api.getFilesInMediaFolder();
-      console.log(response.success);
-      if (response.success) {
-        setMedias(response.data);
-      } else {
-        toast.error("Failed to fetch media files");
-      }
-    });
-  };
+  const isDisabled = isFetchingMedias || isPending;
 
   const handleOpenMediaFolder = async () => {
     const response = await window.api.openMediaFolder();
@@ -73,121 +43,85 @@ export default function Media() {
   };
 
   const handleDeleteFile = async (filePath: string) => {
-    const response = await window.api.deleteFile(filePath);
+    startTransition(async () => {
+      const response = await window.api.deleteFile(filePath);
 
-    if (response.success) {
-      fetchMediaFiles();
-    } else {
-      toast.error("Failed to delete file");
-    }
+      if (response.success) {
+        toast.success("파일이 삭제되었습니다.");
+        fetchMediaFiles();
+      } else {
+        toast.error("파일 삭제에 실패했습니다.");
+      }
+    });
+  };
+
+  const handlePhotoViewIndexChange = () => {
+    document.querySelectorAll("video").forEach((video) => {
+      if (video instanceof HTMLVideoElement) {
+        video.pause();
+        video.currentTime = 0;
+      }
+    });
   };
 
   return (
     <>
-      <PhotoProvider>
-        <div className="space-y-4 flex flex-col h-full">
-          <div className="flex gap-1">
-            <Button size="sm" variant="outline" className="text-xs" onClick={handleOpenMediaFolder}>
-              <FolderOpen />
-              폴더열기
-            </Button>
-            <Button size="sm" variant="outline" className="text-xs" onClick={handleImportFiles}>
-              <HardDriveUpload />
-              미디어 업로드
-            </Button>
-          </div>
-          <div
-            className={cn(
-              "bg-black/10 p-10 rounded-lg relative h-full overflow-y-auto",
-              isPending && "opacity-50",
-            )}
+      <div className="space-y-4 flex flex-col h-full">
+        <div className="flex gap-1">
+          <Button
+            size="sm"
+            variant="outline"
+            className="text-xs"
+            onClick={handleOpenMediaFolder}
+            disabled={isDisabled}
           >
+            <FolderOpen />
+            폴더열기
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="text-xs"
+            onClick={handleImportFiles}
+            disabled={isDisabled}
+          >
+            <HardDriveUpload />
+            미디어 업로드
+          </Button>
+
+          <Button
+            size="sm"
+            variant="outline"
+            className="ml-auto"
+            title="폴더 새로고침"
+            onClick={fetchMediaFiles}
+            disabled={isDisabled}
+          >
+            <FolderSync />
+          </Button>
+        </div>
+        <div
+          className={cn(
+            "bg-black/10 p-10 rounded-lg relative h-full overflow-y-auto",
+            isDisabled && "opacity-50 pointer-events-none",
+          )}
+        >
+          <PhotoProvider onIndexChange={handlePhotoViewIndexChange}>
             <ul className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
               {medias.map((media) => (
                 <li key={media.path} className="hover:opacity-80 transition-opacity cursor-pointer">
-                  <ContextMenu>
-                    <ContextMenuTrigger>
-                      <figure className="aspect-square bg-black/20 rounded-sm overflow-hidden relative mb-2 flex items-center justify-center">
-                        <PhotoView
-                          {...(isImageFile(media.ext)
-                            ? { src: `media://${encodeURI(`${media.name}.${media.ext}`)}` }
-                            : {
-                                render: () => (
-                                  <div className="relative w-0 h-0">
-                                    <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap">
-                                      이미지 형식만 미리볼수 있습니다.
-                                    </span>
-                                  </div>
-                                ),
-                              })}
-                        >
-                          {isImageFile(media.ext) ? (
-                            <img
-                              src={`media://${encodeURI(`${media.name}.${media.ext}`)}`}
-                              alt={media.name}
-                              className="object-contain w-full h-full"
-                            />
-                          ) : (
-                            <File />
-                          )}
-                        </PhotoView>
-                        <Badge className="absolute bottom-2 left-2 uppercase text-xs">
-                          {media.ext}
-                        </Badge>
-                      </figure>
-                    </ContextMenuTrigger>
-                    <ContextMenuContent className="w-32">
-                      <div className="p-2">
-                        <div className="text-xs">
-                          <span className="break-all">{media.name}</span>
-                          <span className="whitespace-nowrap">.{media.ext}</span>
-                        </div>
-                        <span className="text-xs text-muted-foreground">
-                          {(media.size / 1024 / 1024).toFixed(2)} MB
-                        </span>
-                      </div>
-                      <ContextMenuSeparator />
-                      <ContextMenuItem
-                        onClick={() => setDeleteTarget(`${media.name}.${media.ext}`)}
-                      >
-                        삭제
-                      </ContextMenuItem>
-                    </ContextMenuContent>
-                  </ContextMenu>
-
-                  <div className="text-xs flex items-center justify-between gap-2 whitespace-nowrap">
-                    <span className="text-ellipsis overflow-hidden">{media.name}</span>
-                    <span className="opacity-30">{(media.size / 1024 / 1024).toFixed(2)} MB</span>
-                  </div>
+                  <FileContextMenu media={media} onDelete={handleDeleteFile}>
+                    <PhotoView media={media}>
+                      <FileThumbnail media={media} />
+                    </PhotoView>
+                  </FileContextMenu>
+                  <FileInfo media={media} />
                 </li>
               ))}
             </ul>
-          </div>
+          </PhotoProvider>
         </div>
-      </PhotoProvider>
-
-      <AlertDialog open={deleteTarget !== null} onOpenChange={() => setDeleteTarget(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>정말 삭제할까요?</AlertDialogTitle>
-            <AlertDialogDescription>
-              미디어 폴더에서 파일을 삭제합니다. 삭제된 파일은 복구할 수 없습니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (deleteTarget) {
-                  handleDeleteFile(deleteTarget);
-                }
-              }}
-            >
-              삭제
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      </div>
     </>
   );
 }

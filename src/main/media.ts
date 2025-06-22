@@ -25,7 +25,6 @@ function handleMediaProtocol(request: Request) {
   const urlPath = decodeURI(request.url.replace(/^media:\/\//, ""));
 
   const filePath = path.join(MEDIA_FOLDER, urlPath);
-  console.log(filePath);
   return net.fetch(pathToFileURL(filePath).toString());
 }
 
