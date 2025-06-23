@@ -14,7 +14,6 @@ export default function PhotoView({
   const videoPreviewWidth = windowSize.width * 0.8;
   const videoPreviewHeight = (videoPreviewWidth / 16) * 9;
 
-  console.log(videoPreviewWidth);
   return (
     <PhotoViewComponent
       {...(isImageFile(media.ext)

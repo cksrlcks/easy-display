@@ -4,10 +4,11 @@ import { Toaster } from "sonner";
 import Logo from "./components/layout/Logo";
 import Nav from "./components/layout/Nav";
 import Screen from "./components/layout/Screen";
+import Provider from "./context/Provider";
 
 export default function App() {
   return (
-    <>
+    <Provider>
       <Screen>
         <Screen.Header>
           <Logo />
@@ -19,6 +20,6 @@ export default function App() {
       </Screen>
 
       <Toaster />
-    </>
+    </Provider>
   );
 }
