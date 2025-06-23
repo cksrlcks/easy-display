@@ -1,16 +1,11 @@
+import "./ipc";
+
 import { electronApp, optimizer } from "@electron-toolkit/utils";
-import { app, BrowserWindow, ipcMain, Tray } from "electron";
+import { app, BrowserWindow, Tray } from "electron";
 
 import icon from "../../resources/icon.png?asset";
-import { getLocalIp } from "./lib/network";
-import {
-  copyFiles,
-  deleteFile,
-  getFilesInMediaFolder,
-  initializeMedia,
-  openMediaFolder,
-  selectFiles,
-} from "./media";
+import { initializeMedia } from "./media";
+import { startServer } from "./server";
 import { initializeTray } from "./tray";
 import { createWindow } from "./window";
 
@@ -33,8 +28,11 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  // Initialize media folder and server
+  // Initialize media folder and media protocol
   initializeMedia();
+
+  // start express server for external display
+  startServer();
 
   // Create the main window
   state.mainWindow = createWindow(state);
@@ -70,15 +68,3 @@ app.on("before-quit", () => {
 
   state.isQuitting = true;
 });
-
-/**
- * ipcMain handlers collection
- */
-
-ipcMain.handle("get-files-in-media-folder", getFilesInMediaFolder);
-ipcMain.handle("open-media-folder", openMediaFolder);
-ipcMain.handle("select-files", selectFiles);
-ipcMain.handle("copy-to-media-folder", copyFiles);
-ipcMain.handle("delete-file", deleteFile);
-
-ipcMain.handle("get-local-ip", getLocalIp);
