@@ -1,4 +1,5 @@
 import "./ipc";
+import "./db/client";
 
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { app, BrowserWindow, Tray } from "electron";

@@ -1,7 +1,7 @@
 import useWindowSize from "@renderer/hooks/useWindowSize";
 import { isImageFile, isVideoFile } from "@renderer/lib/utils";
 import { PhotoView as PhotoViewComponent } from "react-photo-view";
-import { InternalFile } from "src/types";
+import { InternalFile } from "src/shared/types";
 
 export default function PhotoView({
   media,

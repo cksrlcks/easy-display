@@ -1,7 +1,7 @@
 import { dialog, shell } from "electron";
 import fs from "fs";
 import path from "path";
-import { InternalFile, IPCResponse } from "src/types";
+import { InternalFile, IPCResponse } from "src/shared/types";
 
 import { MEDIA_FOLDER } from "../constants";
 

@@ -16,7 +16,7 @@ import {
   ContextMenuTrigger,
 } from "@renderer/components/ui/context-menu";
 import { PropsWithChildren, useState } from "react";
-import { InternalFile } from "src/types";
+import { InternalFile } from "src/shared/types";
 
 type FileContextMenuProps = PropsWithChildren<{
   media: InternalFile;

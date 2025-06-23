@@ -1,6 +1,6 @@
 import { isImageFile, isVideoFile } from "@renderer/lib/utils";
 import { Clapperboard, File } from "lucide-react";
-import { InternalFile } from "src/types";
+import { InternalFile } from "src/shared/types";
 
 import ExtBadge from "./ExtBadge";
 

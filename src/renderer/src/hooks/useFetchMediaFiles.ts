@@ -1,6 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { InternalFile } from "src/types";
+import { InternalFile } from "src/shared/types";
 
 export default function useFetchMediaFiles() {
   const [isPending, startTransition] = useTransition();

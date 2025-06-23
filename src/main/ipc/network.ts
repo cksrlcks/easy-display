@@ -1,5 +1,5 @@
 import os from "os";
-import { IPCResponse } from "src/types";
+import { IPCResponse } from "src/shared/types";
 
 export async function getLocalIp(): IPCResponse<string> {
   const interfaces = os.networkInterfaces();
