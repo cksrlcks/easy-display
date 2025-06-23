@@ -1,11 +1,11 @@
-import { createBrowserRouter } from "react-router";
+import { createHashRouter } from "react-router";
 
 import App from "./App";
 import Display from "./routes/Display";
 import Media from "./routes/Media";
 import Screen from "./routes/Screen";
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: "/",
     element: <App />,

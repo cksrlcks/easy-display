@@ -30,7 +30,14 @@ function handleMediaProtocol(request: Request) {
 
 function startMediaServer() {
   const app = express();
+
   app.use("/media", express.static(MEDIA_FOLDER));
+  app.use(express.static(path.join(__dirname, "../renderer")));
+
+  app.get("/screen", (_, res) => {
+    res.sendFile(path.join(__dirname, "../renderer/screen.html"));
+  });
+
   app.listen(3000, () => {
     console.log(`🟢 Media server: http://${getLocalIp()}:3000/media/`);
   });
