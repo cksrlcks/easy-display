@@ -7,3 +7,24 @@ export type InternalFile = {
   name: string;
   size: number;
 };
+
+export type Screen = {
+  id: string;
+  alias: string;
+  direction: "horizontal" | "vertical";
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Slide = {
+  id: string;
+  screenId: string;
+  filePath: string;
+  duration: number;
+  show: boolean;
+  order: number;
+};
+
+export type ScreenWithSlides = Screen & {
+  slides: Slide[];
+};

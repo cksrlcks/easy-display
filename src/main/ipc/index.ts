@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 
+import { createScreen, deleteScreen, getScreenList, updateScreen } from "./db";
 import {
   copyFiles,
   deleteFile,
@@ -20,3 +21,9 @@ ipcMain.handle("delete-file", deleteFile);
 
 // network ipc handlers
 ipcMain.handle("get-local-ip", getLocalIp);
+
+// db
+ipcMain.handle("get-screen-list", getScreenList);
+ipcMain.handle("create-screen", createScreen);
+ipcMain.handle("update-screen", updateScreen);
+ipcMain.handle("delete-screen", deleteScreen);

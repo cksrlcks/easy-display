@@ -22,7 +22,7 @@ export function FileThumbnail({ media }: { media: InternalFile }) {
   };
 
   return (
-    <figure className="aspect-square bg-black/20 rounded-sm overflow-hidden relative mb-2 flex items-center justify-center">
+    <figure className="aspect-square bg-black/20 rounded-sm overflow-hidden relative flex items-center justify-center">
       {render()}
     </figure>
   );

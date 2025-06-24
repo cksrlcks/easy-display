@@ -4,6 +4,7 @@ import App from "./App";
 import Display from "./routes/Display";
 import Media from "./routes/Media";
 import Screen from "./routes/Screen";
+import ScreenSetting from "./routes/ScreenSetting";
 
 export const router = createHashRouter([
   {
@@ -16,7 +17,16 @@ export const router = createHashRouter([
       },
       {
         path: "screen",
-        element: <Screen />,
+        children: [
+          {
+            index: true,
+            element: <Screen />,
+          },
+          {
+            path: ":screenId",
+            element: <ScreenSetting />,
+          },
+        ],
       },
       {
         path: "display",

@@ -9,7 +9,7 @@ export function useMediaFiles() {
       const response = await window.api.getFilesInMediaFolder();
 
       if (!response.success) {
-        throw new Error(response.message);
+        toast.error(response.message);
       }
 
       return response.data;

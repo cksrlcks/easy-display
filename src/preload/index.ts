@@ -1,5 +1,6 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
+import { Screen } from "src/shared/types";
 
 const api = {
   getFilesInMediaFolder: () => ipcRenderer.invoke("get-files-in-media-folder"),
@@ -9,6 +10,12 @@ const api = {
   copyToMediaFolder: (filePaths: string[]) => ipcRenderer.invoke("copy-to-media-folder", filePaths),
   openFile: (filePath: string) => ipcRenderer.invoke("open-file", filePath),
   deleteFile: (filePath: string) => ipcRenderer.invoke("delete-file", filePath),
+  getScreenList: () => ipcRenderer.invoke("get-screen-list"),
+  createScreen: (data: Pick<Screen, "alias" | "direction">) =>
+    ipcRenderer.invoke("create-screen", data),
+  updateScreen: (data: Pick<Screen, "id" | "alias" | "direction">) =>
+    ipcRenderer.invoke("update-screen", data),
+  deleteScreen: (data: Pick<Screen, "id">) => ipcRenderer.invoke("delete-screen", data),
 };
 
 if (process.contextIsolated) {

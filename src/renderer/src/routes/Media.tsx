@@ -62,7 +62,7 @@ export default function Media() {
                   onDelete={onDeleteFile}
                   onOpen={() => onOpenFile(media.base)}
                 >
-                  <div onDoubleClick={() => onOpenFile(media.base)}>
+                  <div onDoubleClick={() => onOpenFile(media.base)} className="mb-2">
                     <FileThumbnail media={media} />
                   </div>
                 </FileContextMenu>

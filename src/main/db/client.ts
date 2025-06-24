@@ -4,6 +4,8 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 
+import { screens } from "./schema";
+
 function ensureDatabaseFilePath(): string {
   const documentsPath = path.join(os.homedir(), "Documents");
   const dbDir = path.join(documentsPath, "easy-display", "db");
@@ -18,23 +20,25 @@ function ensureDatabaseFilePath(): string {
 function initDatabase(dbFilePath: string) {
   const db = new Database(dbFilePath);
 
-  db.exec(
-    `
-      CREATE TABLE IF NOT EXISTS screen (
-        id TEXT PRIMARY KEY,
-        alias TEXT NOT NULL UNIQUE
-      );
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS screen (
+      id TEXT PRIMARY KEY,
+      alias TEXT NOT NULL UNIQUE,
+      direction TEXT NOT NULL DEFAULT 'horizontal',
+      created_at TEXT DEFAULT (CURRENT_TIMESTAMP),
+      updated_at TEXT DEFAULT (CURRENT_TIMESTAMP)
+    );
 
-      CREATE TABLE IF NOT EXISTS slide (
-        id TEXT PRIMARY KEY,
-        screen_id TEXT NOT NULL,
-        file_path TEXT NOT NULL,
-        type TEXT CHECK(type IN ('image', 'video')) NOT NULL,
-        "order" INTEGER NOT NULL,
-        FOREIGN KEY (screen_id) REFERENCES screen(id) ON DELETE CASCADE
-      );
-    `,
-  );
+    CREATE TABLE IF NOT EXISTS slide (
+      id TEXT PRIMARY KEY,
+      screen_id TEXT NOT NULL,
+      file_path TEXT NOT NULL,
+      duration INTEGER NOT NULL,
+      show BOOLEAN NOT NULL DEFAULT 1,
+      "order" INTEGER NOT NULL,
+      FOREIGN KEY (screen_id) REFERENCES screen(id) ON DELETE CASCADE
+    );
+  `);
 
   return db;
 }
@@ -42,4 +46,4 @@ function initDatabase(dbFilePath: string) {
 const dbFilePath = ensureDatabaseFilePath();
 const sqlite = initDatabase(dbFilePath);
 
-export const db = drizzle({ client: sqlite });
+export const db = drizzle({ client: sqlite, schema: { screens } });

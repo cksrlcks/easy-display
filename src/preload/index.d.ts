@@ -1,5 +1,5 @@
 import { ElectronAPI } from "@electron-toolkit/preload";
-import { InternalFile, IPCResponse } from "src/shared/types";
+import { InternalFile, IPCResponse, ScreenWithSlides } from "src/shared/types";
 declare global {
   interface Window {
     electron: ElectronAPI;
@@ -11,6 +11,10 @@ declare global {
       copyToMediaFolder: (filePaths: string[]) => IPCResponse<string[]>;
       openFile: (filePath: string) => IPCResponse<void>;
       deleteFile: (filePath: string) => IPCResponse<void>;
+      getScreenList: () => IPCResponse<ScreenWithSlides[]>;
+      createScreen: (data: Pick<Screen, "alias" | "direction">) => IPCResponse<void>;
+      updateScreen: (data: Pick<Screen, "id" | "alias" | "direction">) => IPCResponse<void>;
+      deleteScreen: (data: Pick<Screen, "id">) => IPCResponse<void>;
     };
   }
 }
