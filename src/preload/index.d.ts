@@ -4,6 +4,7 @@ declare global {
   interface Window {
     electron: ElectronAPI;
     api: {
+      quitApp: () => IPCResponse<void>;
       getFilesInMediaFolder: () => IPCResponse<InternalFile[]>;
       getLocalIp: () => IPCResponse<string>;
       openMediaFolder: () => IPCResponse<void>;

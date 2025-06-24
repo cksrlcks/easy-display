@@ -3,6 +3,7 @@ import { contextBridge, ipcRenderer } from "electron";
 import { Screen } from "src/shared/types";
 
 const api = {
+  quitApp: () => ipcRenderer.invoke("quit-app"),
   getFilesInMediaFolder: () => ipcRenderer.invoke("get-files-in-media-folder"),
   getLocalIp: () => ipcRenderer.invoke("get-local-ip"),
   openMediaFolder: () => ipcRenderer.invoke("open-media-folder"),

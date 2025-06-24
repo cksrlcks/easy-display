@@ -1,6 +1,7 @@
 import { createHashRouter } from "react-router";
 
 import App from "./App";
+import Error from "./components/Error";
 import Display from "./routes/Display";
 import Media from "./routes/Media";
 import Screen from "./routes/Screen";
@@ -9,6 +10,7 @@ import ScreenSetting from "./routes/ScreenSetting";
 export const router = createHashRouter([
   {
     path: "/",
+    errorElement: <Error />,
     element: <App />,
     children: [
       {

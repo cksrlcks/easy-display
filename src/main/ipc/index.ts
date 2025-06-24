@@ -1,6 +1,7 @@
 import { ipcMain } from "electron";
 
 import { createScreen, deleteScreen, getScreenList, updateScreen } from "./db";
+import { quitApp } from "./general";
 import {
   copyFiles,
   deleteFile,
@@ -10,6 +11,9 @@ import {
   selectFiles,
 } from "./media";
 import { getLocalIp } from "./network";
+
+// general ipc handlers
+ipcMain.handle("quit-app", quitApp);
 
 // media ipc handlers
 ipcMain.handle("get-files-in-media-folder", getFilesInMediaFolder);
