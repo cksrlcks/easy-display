@@ -9,8 +9,12 @@ export const screens = sqliteTable(
     direction: text("direction", { enum: ["horizontal", "vertical"] })
       .notNull()
       .default("horizontal"),
-    createdAt: text("created_at").default(sql`(CURRENT_TIMESTAMP)`),
-    updatedAt: text("updated_at").default(sql`(CURRENT_TIMESTAMP)`),
+    createdAt: text("created_at")
+      .default(sql`(CURRENT_TIMESTAMP)`)
+      .notNull(),
+    updatedAt: text("updated_at")
+      .default(sql`(CURRENT_TIMESTAMP)`)
+      .notNull(),
   },
   (screen) => [unique("unique_alias").on(screen.alias)],
 );
@@ -20,8 +24,8 @@ export const slides = sqliteTable("slide", {
   screenId: text("screen_id")
     .notNull()
     .references(() => screens.id, { onDelete: "cascade" }),
-  filePath: text("file_path").notNull(),
-  duration: integer("duration").notNull(),
+  filePath: text("file_path"),
+  duration: integer("duration"),
   show: integer("show", { mode: "boolean" }).notNull().default(true),
   order: integer("order").notNull().default(0),
 });

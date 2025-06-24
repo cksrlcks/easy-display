@@ -19,12 +19,18 @@ export type Screen = {
 export type Slide = {
   id: string;
   screenId: string;
-  filePath: string;
-  duration: number;
+  filePath: string | null;
+  duration: number | null;
   show: boolean;
   order: number;
 };
 
 export type ScreenWithSlides = Screen & {
   slides: Slide[];
+};
+
+export type ScreenWithFileBasedSlides = Screen & {
+  slides: (Omit<Slide, "filePath"> & {
+    file: InternalFile | null;
+  })[];
 };

@@ -4,7 +4,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 
-import { screens } from "./schema";
+import * as schema from "./schema";
 
 function ensureDatabaseFilePath(): string {
   const documentsPath = path.join(os.homedir(), "Documents");
@@ -25,15 +25,15 @@ function initDatabase(dbFilePath: string) {
       id TEXT PRIMARY KEY,
       alias TEXT NOT NULL UNIQUE,
       direction TEXT NOT NULL DEFAULT 'horizontal',
-      created_at TEXT DEFAULT (CURRENT_TIMESTAMP),
-      updated_at TEXT DEFAULT (CURRENT_TIMESTAMP)
+      created_at TEXT DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
+      updated_at TEXT DEFAULT (CURRENT_TIMESTAMP) NOT NULL
     );
 
     CREATE TABLE IF NOT EXISTS slide (
       id TEXT PRIMARY KEY,
       screen_id TEXT NOT NULL,
-      file_path TEXT NOT NULL,
-      duration INTEGER NOT NULL,
+      file_path TEXT,
+      duration INTEGER,
       show BOOLEAN NOT NULL DEFAULT 1,
       "order" INTEGER NOT NULL,
       FOREIGN KEY (screen_id) REFERENCES screen(id) ON DELETE CASCADE
@@ -46,4 +46,4 @@ function initDatabase(dbFilePath: string) {
 const dbFilePath = ensureDatabaseFilePath();
 const sqlite = initDatabase(dbFilePath);
 
-export const db = drizzle({ client: sqlite, schema: { screens } });
+export const db = drizzle({ client: sqlite, schema });

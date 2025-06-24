@@ -1,6 +1,13 @@
 import { ipcMain } from "electron";
 
-import { createScreen, deleteScreen, getScreenList, updateScreen } from "./db";
+import {
+  createScreen,
+  deleteScreen,
+  getScreenById,
+  getScreenList,
+  updateScreen,
+  updateScreenSlides,
+} from "./db";
 import { quitApp } from "./general";
 import {
   copyFiles,
@@ -31,3 +38,5 @@ ipcMain.handle("get-screen-list", getScreenList);
 ipcMain.handle("create-screen", createScreen);
 ipcMain.handle("update-screen", updateScreen);
 ipcMain.handle("delete-screen", deleteScreen);
+ipcMain.handle("get-screen-by-id", getScreenById);
+ipcMain.handle("update-screen-slides", updateScreenSlides);

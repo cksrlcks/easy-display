@@ -59,7 +59,7 @@ export default function Media() {
               <li key={media.path} className="hover:opacity-80 transition-opacity cursor-pointer">
                 <FileContextMenu
                   media={media}
-                  onDelete={onDeleteFile}
+                  onDelete={() => onDeleteFile(media.base)}
                   onOpen={() => onOpenFile(media.base)}
                 >
                   <div onDoubleClick={() => onOpenFile(media.base)} className="mb-2">

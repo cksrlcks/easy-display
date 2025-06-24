@@ -46,7 +46,7 @@ export async function openMediaFolder(): IPCResponse<void> {
   }
 }
 
-export async function selectFiles(): Promise<IPCResponse<string[]>> {
+export async function selectFiles(): IPCResponse<string[]> {
   try {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ["openFile", "multiSelections"],

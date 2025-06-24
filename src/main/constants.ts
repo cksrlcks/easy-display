@@ -28,4 +28,8 @@ export const MESSAGE = {
   FAIL_TO_UPDATE_SCREEN: "화면 업데이트에 실패했습니다.",
   SUCCESS_TO_DELETE_SCREEN: "화면이 성공적으로 삭제되었습니다.",
   FAIL_TO_DELETE_SCREEN: "화면 삭제에 실패했습니다.",
+  FAIL_TO_FIND_SCREEN: "화면을 찾을 수 없습니다.",
+  FAIL_TO_GET_SCREEN_BY_ID: "화면 정보를 가져오는 데 실패했습니다.",
+  SUCCESS_TO_UPDATE_SCREEN_SLIDES: "슬라이드가 성공적으로 업데이트되었습니다.",
+  FAIL_TO_UPDATE_SCREEN_SLIDES: "슬라이드 업데이트에 실패했습니다.",
 };

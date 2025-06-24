@@ -1,6 +1,6 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
-import { Screen } from "src/shared/types";
+import { InternalFile, Screen, Slide } from "src/shared/types";
 
 const api = {
   quitApp: () => ipcRenderer.invoke("quit-app"),
@@ -17,6 +17,11 @@ const api = {
   updateScreen: (data: Pick<Screen, "id" | "alias" | "direction">) =>
     ipcRenderer.invoke("update-screen", data),
   deleteScreen: (data: Pick<Screen, "id">) => ipcRenderer.invoke("delete-screen", data),
+  getScreenById: (data: Pick<Screen, "id">) => ipcRenderer.invoke("get-screen-by-id", data),
+  updateScreenSlides: (data: {
+    screenId: Screen["id"];
+    slides: (Pick<Slide, "duration" | "show"> & { file: InternalFile })[];
+  }) => ipcRenderer.invoke("update-screen-slides", data),
 };
 
 if (process.contextIsolated) {

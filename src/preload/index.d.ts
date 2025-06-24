@@ -1,5 +1,11 @@
 import { ElectronAPI } from "@electron-toolkit/preload";
-import { InternalFile, IPCResponse, ScreenWithSlides } from "src/shared/types";
+import {
+  InternalFile,
+  IPCResponse,
+  ScreenWithFileBasedSlides,
+  ScreenWithSlides,
+  Slide,
+} from "src/shared/types";
 declare global {
   interface Window {
     electron: ElectronAPI;
@@ -16,6 +22,11 @@ declare global {
       createScreen: (data: Pick<Screen, "alias" | "direction">) => IPCResponse<void>;
       updateScreen: (data: Pick<Screen, "id" | "alias" | "direction">) => IPCResponse<void>;
       deleteScreen: (data: Pick<Screen, "id">) => IPCResponse<void>;
+      getScreenById: (data: Pick<Screen, "id">) => IPCResponse<ScreenWithFileBasedSlides>;
+      updateScreenSlides: (data: {
+        screenId: Screen["id"];
+        slides: Pick<Slide, "duration" | "show" | "filePath">[];
+      }) => IPCResponse<void>;
     };
   }
 }

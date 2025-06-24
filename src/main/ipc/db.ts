@@ -1,20 +1,31 @@
-import { Screen } from "@shared/types";
+import {
+  IPCResponse,
+  Screen,
+  ScreenWithFileBasedSlides,
+  ScreenWithSlides,
+  Slide,
+} from "@shared/types";
 import { eq } from "drizzle-orm";
+import fs from "fs";
 import { nanoid } from "nanoid";
+import path from "path";
 
 import { MESSAGE } from "../constants";
 import { db } from "../db/client";
-import { screens } from "../db/schema";
+import { screens, slides } from "../db/schema";
 
-export async function getScreenList() {
+export async function getScreenList(): IPCResponse<ScreenWithSlides[]> {
   try {
     const screens = await db.query.screens.findMany({
+      with: {
+        slides: true,
+      },
       orderBy: (screen, { desc }) => desc(screen.createdAt),
     });
 
     return {
       success: true,
-      data: screens.map((screen) => ({ ...screen, slides: [] })),
+      data: screens,
     };
   } catch (error) {
     console.error("Error fetching screen list:", error);
@@ -25,7 +36,10 @@ export async function getScreenList() {
   }
 }
 
-export async function createScreen(_, data: Pick<Screen, "alias" | "direction">) {
+export async function createScreen(
+  _,
+  data: Pick<Screen, "alias" | "direction">,
+): IPCResponse<void> {
   try {
     const existingScreen = await db.query.screens.findFirst({
       where: eq(screens.alias, data.alias),
@@ -59,7 +73,10 @@ export async function createScreen(_, data: Pick<Screen, "alias" | "direction">)
   }
 }
 
-export async function updateScreen(_, data: Pick<Screen, "id" | "alias" | "direction">) {
+export async function updateScreen(
+  _,
+  data: Pick<Screen, "id" | "alias" | "direction">,
+): IPCResponse<void> {
   try {
     await db
       .update(screens)
@@ -83,7 +100,7 @@ export async function updateScreen(_, data: Pick<Screen, "id" | "alias" | "direc
   }
 }
 
-export async function deleteScreen(_, data: Pick<Screen, "id">) {
+export async function deleteScreen(_, data: Pick<Screen, "id">): IPCResponse<void> {
   try {
     await db.delete(screens).where(eq(screens.id, data.id));
 
@@ -96,6 +113,102 @@ export async function deleteScreen(_, data: Pick<Screen, "id">) {
     return {
       success: false,
       message: MESSAGE.FAIL_TO_DELETE_SCREEN,
+    };
+  }
+}
+
+export async function getScreenById(
+  _,
+  data: Pick<Screen, "id">,
+): IPCResponse<ScreenWithFileBasedSlides> {
+  try {
+    const screen = await db.query.screens.findFirst({
+      where: eq(screens.id, data.id),
+      with: {
+        slides: true,
+      },
+    });
+
+    if (!screen) {
+      return {
+        success: false,
+        message: MESSAGE.FAIL_TO_FIND_SCREEN,
+      };
+    }
+
+    const slides = screen.slides.map((item) => {
+      if (!item.filePath || !fs.existsSync(item.filePath)) {
+        return {
+          ...item,
+          file: null,
+        };
+      }
+
+      const ext = path.extname(item.filePath).toLowerCase().slice(1);
+      return {
+        ...item,
+        file: {
+          base: path.parse(item.filePath).base,
+          name: path.parse(item.filePath).name,
+          size: fs.statSync(item.filePath).size,
+          path: item.filePath,
+          ext,
+        },
+      };
+    });
+
+    return {
+      success: true,
+      data: {
+        ...screen,
+        slides,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching screen by ID:", error);
+    return {
+      success: false,
+      message: MESSAGE.FAIL_TO_GET_SCREEN_BY_ID,
+    };
+  }
+}
+
+type UpdateScreenSlidesData = {
+  screenId: string;
+  slides: Pick<Slide, "duration" | "show" | "filePath">[];
+};
+export async function updateScreenSlides(_, data: UpdateScreenSlidesData): IPCResponse<void> {
+  try {
+    db.transaction(
+      (tx) => {
+        tx.delete(slides).where(eq(slides.screenId, data.screenId)).run();
+
+        data.slides.map((slide, index) => {
+          const slideData = {
+            id: nanoid(),
+            screenId: data.screenId,
+            filePath: slide.filePath,
+            duration: slide.duration,
+            show: slide.show,
+            order: index,
+          };
+
+          return tx.insert(slides).values(slideData).run();
+        });
+      },
+      {
+        behavior: "deferred",
+      },
+    );
+    return {
+      success: true,
+      message: MESSAGE.SUCCESS_TO_UPDATE_SCREEN_SLIDES,
+    };
+  } catch (error) {
+    console.error("Error updating screen slides:", error);
+    return {
+      success: false,
+      message: MESSAGE.FAIL_TO_UPDATE_SCREEN_SLIDES,
     };
   }
 }
