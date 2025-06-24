@@ -4,6 +4,7 @@ import {
   copyFiles,
   deleteFile,
   getFilesInMediaFolder,
+  openFile,
   openMediaFolder,
   selectFiles,
 } from "./media";
@@ -14,6 +15,7 @@ ipcMain.handle("get-files-in-media-folder", getFilesInMediaFolder);
 ipcMain.handle("open-media-folder", openMediaFolder);
 ipcMain.handle("select-files", selectFiles);
 ipcMain.handle("copy-to-media-folder", copyFiles);
+ipcMain.handle("open-file", openFile);
 ipcMain.handle("delete-file", deleteFile);
 
 // network ipc handlers

@@ -1,16 +1,15 @@
 import { ElectronAPI } from "@electron-toolkit/preload";
-import { IPCResponse } from "src/shared/types";
+import { InternalFile, IPCResponse } from "src/shared/types";
 declare global {
   interface Window {
     electron: ElectronAPI;
     api: {
-      getFilesInMediaFolder: () => IPCResponse<
-        { ext: string; path: string; name: string; size: number }[]
-      >;
+      getFilesInMediaFolder: () => IPCResponse<InternalFile[]>;
       getLocalIp: () => IPCResponse<string>;
       openMediaFolder: () => IPCResponse<void>;
       selectFiles: () => IPCResponse<string[]>;
       copyToMediaFolder: (filePaths: string[]) => IPCResponse<string[]>;
+      openFile: (filePath: string) => IPCResponse<void>;
       deleteFile: (filePath: string) => IPCResponse<void>;
     };
   }

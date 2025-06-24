@@ -1,10 +1,7 @@
-export type IPCResponse<T = void> = Promise<
-  T extends void
-    ? { success: true } | { success: false; error: string }
-    : { success: true; data: T } | { success: false; error: string }
->;
+export type IPCResponse<T = void> = Promise<{ success: boolean; message?: string; data?: T }>;
 
 export type InternalFile = {
+  base: string;
   ext: string;
   path: string;
   name: string;

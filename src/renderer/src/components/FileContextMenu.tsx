@@ -21,9 +21,15 @@ import { InternalFile } from "src/shared/types";
 type FileContextMenuProps = PropsWithChildren<{
   media: InternalFile;
   onDelete: (fileName: string) => void;
+  onOpen: (filePath: string) => void;
 }>;
 
-export default function FileContextMenu({ children, media, onDelete }: FileContextMenuProps) {
+export default function FileContextMenu({
+  children,
+  media,
+  onDelete,
+  onOpen,
+}: FileContextMenuProps) {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   return (
@@ -40,10 +46,11 @@ export default function FileContextMenu({ children, media, onDelete }: FileConte
               {(media.size / 1024 / 1024).toFixed(2)} MB
             </span>
           </div>
-          <ContextMenuSeparator />
-          <ContextMenuItem onClick={() => setDeleteTarget(`${media.name}.${media.ext}`)}>
-            삭제
+          <ContextMenuItem onClick={() => onOpen(media.base)}>
+            <span className="text-xs">열기</span>
           </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={() => setDeleteTarget(media.base)}>삭제</ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
 

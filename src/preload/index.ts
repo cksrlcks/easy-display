@@ -7,6 +7,7 @@ const api = {
   openMediaFolder: () => ipcRenderer.invoke("open-media-folder"),
   selectFiles: () => ipcRenderer.invoke("select-files"),
   copyToMediaFolder: (filePaths: string[]) => ipcRenderer.invoke("copy-to-media-folder", filePaths),
+  openFile: (filePath: string) => ipcRenderer.invoke("open-file", filePath),
   deleteFile: (filePath: string) => ipcRenderer.invoke("delete-file", filePath),
 };
 

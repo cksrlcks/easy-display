@@ -1,6 +1,8 @@
 import os from "os";
 import { IPCResponse } from "src/shared/types";
 
+import { MESSAGE } from "../constants";
+
 export async function getLocalIp(): IPCResponse<string> {
   const interfaces = os.networkInterfaces();
 
@@ -16,6 +18,6 @@ export async function getLocalIp(): IPCResponse<string> {
 
   return {
     success: false,
-    error: "No valid IP address found",
+    message: MESSAGE.FAIL_TO_GET_LOCAL_IP,
   };
 }

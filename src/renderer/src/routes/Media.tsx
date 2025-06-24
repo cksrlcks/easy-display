@@ -2,26 +2,15 @@ import "react-photo-view/dist/react-photo-view.css";
 
 import { FileInfo, FileThumbnail } from "@renderer/components/File";
 import FileContextMenu from "@renderer/components/FileContextMenu";
-import PhotoView from "@renderer/components/PhotoView";
 import { Button } from "@renderer/components/ui/button";
 import { useMediaActions, useMediaFiles } from "@renderer/hooks/useMediaFiles";
 import { cn } from "@renderer/lib/utils";
 import { FolderOpen, FolderSync, HardDriveUpload } from "lucide-react";
-import { PhotoProvider } from "react-photo-view";
-
 export default function Media() {
   const { data: medias, isPending: isFetchingMedias, refetch } = useMediaFiles();
-  const { isPending, onOpenMediaFolder, onImportFiles, onDeleteFile } = useMediaActions();
+  const { isPending, onOpenMediaFolder, onImportFiles, onDeleteFile, onOpenFile } =
+    useMediaActions();
   const isDisabled = isFetchingMedias || isPending;
-
-  const handlePhotoViewIndexChange = () => {
-    document.querySelectorAll("video").forEach((video) => {
-      if (video instanceof HTMLVideoElement) {
-        video.pause();
-        video.currentTime = 0;
-      }
-    });
-  };
 
   return (
     <>
@@ -65,20 +54,22 @@ export default function Media() {
             isDisabled && "opacity-50 pointer-events-none",
           )}
         >
-          <PhotoProvider onIndexChange={handlePhotoViewIndexChange}>
-            <ul className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {medias?.map((media) => (
-                <li key={media.path} className="hover:opacity-80 transition-opacity cursor-pointer">
-                  <FileContextMenu media={media} onDelete={onDeleteFile}>
-                    <PhotoView media={media}>
-                      <FileThumbnail media={media} />
-                    </PhotoView>
-                  </FileContextMenu>
-                  <FileInfo media={media} />
-                </li>
-              ))}
-            </ul>
-          </PhotoProvider>
+          <ul className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            {medias?.map((media) => (
+              <li key={media.path} className="hover:opacity-80 transition-opacity cursor-pointer">
+                <FileContextMenu
+                  media={media}
+                  onDelete={onDeleteFile}
+                  onOpen={() => onOpenFile(media.base)}
+                >
+                  <div onDoubleClick={() => onOpenFile(media.base)}>
+                    <FileThumbnail media={media} />
+                  </div>
+                </FileContextMenu>
+                <FileInfo media={media} />
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </>

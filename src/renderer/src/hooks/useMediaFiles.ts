@@ -9,7 +9,7 @@ export function useMediaFiles() {
       const response = await window.api.getFilesInMediaFolder();
 
       if (!response.success) {
-        throw new Error(response.error);
+        throw new Error(response.message);
       }
 
       return response.data;
@@ -25,7 +25,7 @@ export function useMediaActions() {
     const response = await window.api.openMediaFolder();
 
     if (!response.success) {
-      toast.error("Failed to open media folder");
+      toast.error(response.message);
     }
   };
 
@@ -40,7 +40,7 @@ export function useMediaActions() {
         await window.api.copyToMediaFolder(filePaths);
         queryClient.invalidateQueries({ queryKey: ["mediaFiles"] });
       } else {
-        toast.error("Failed to select files");
+        toast.error(response.message);
       }
     });
   };
@@ -50,12 +50,20 @@ export function useMediaActions() {
       const response = await window.api.deleteFile(filePath);
 
       if (response.success) {
-        toast.success("파일이 삭제되었습니다.");
+        toast.success(response.message);
         queryClient.invalidateQueries({ queryKey: ["mediaFiles"] });
       } else {
-        toast.error("파일 삭제에 실패했습니다.");
+        toast.error(response.message);
       }
     });
+  };
+
+  const onOpenFile = async (filePath: string) => {
+    const response = await window.api.openFile(filePath);
+
+    if (!response.success) {
+      toast.error(response.message);
+    }
   };
 
   return {
@@ -63,5 +71,6 @@ export function useMediaActions() {
     onOpenMediaFolder,
     onImportFiles,
     onDeleteFile,
+    onOpenFile,
   };
 }
