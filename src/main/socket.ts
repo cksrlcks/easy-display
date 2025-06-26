@@ -7,7 +7,6 @@ import { state } from ".";
 let socket: dgram.Socket | null = null;
 let intervalTimer: NodeJS.Timeout | null = null;
 
-const PORT = 41234;
 const discoveredTVs = new Map<string, LocalDevice & { message: string; lastSeen: number }>();
 
 function parseTV(message: string): { tvId: string; tvName: string } | null {
@@ -23,12 +22,12 @@ function parseTV(message: string): { tvId: string; tvName: string } | null {
 }
 
 function startDeviceDiscovery() {
-  if (socket) return;
+  if (socket || !state.config) return;
 
   socket = dgram.createSocket("udp4");
 
   // 1. binding
-  socket.bind(PORT);
+  socket.bind(state.config.udpPort);
 
   // 2. listening
   socket.on("listening", () => {
@@ -47,24 +46,31 @@ function startDeviceDiscovery() {
 
     const { tvId, tvName } = parsedInfo;
 
-    console.log(`✅ Discovered TV: ${tvId} at ${rinfo.address}`);
+    console.log(`Discovered TV: ${tvId} at ${rinfo.address}`);
     discoveredTVs.set(tvId, { tvId, tvName, ip: rinfo.address, message, lastSeen: Date.now() });
-  });
 
+    if (!socket || !state.config) return;
+
+    const reply = Buffer.from(
+      JSON.stringify({
+        type: "pc-response",
+        displayUrl: "/screen",
+        displayUrlPort: state.config.mediaServerPort,
+      }),
+    );
+    console.log(`📡 Sending reply to ${rinfo.address}:${rinfo.port}`);
+    socket.send(reply, rinfo.port, rinfo.address);
+  });
+}
+
+function startSendingDiscoveredDevices() {
   intervalTimer = setInterval(() => sendDiscoveredDevices(discoveredTVs), 2000);
 }
 
-function stopDeviceDiscovery() {
-  console.log("Stopping TV discovery");
-
+function stopSendingDiscoveredDevices() {
   if (intervalTimer) {
     clearInterval(intervalTimer);
     intervalTimer = null;
-  }
-
-  if (socket) {
-    socket.close();
-    socket = null;
   }
 }
 
@@ -82,6 +88,8 @@ function sendDiscoveredDevices(
 }
 
 export function initializeSocket() {
-  ipcMain.handle("socket:start-discovery", () => startDeviceDiscovery());
-  ipcMain.handle("socket:stop-discovery", () => stopDeviceDiscovery());
+  startDeviceDiscovery();
+
+  ipcMain.handle("socket:start-discovery", () => startSendingDiscoveredDevices());
+  ipcMain.handle("socket:stop-discovery", () => stopSendingDiscoveredDevices());
 }

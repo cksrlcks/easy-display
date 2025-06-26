@@ -5,6 +5,7 @@ import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { app, BrowserWindow, Tray } from "electron";
 
 import icon from "../../resources/icon.png?asset";
+import { Config, initializeConfig } from "./config";
 import { initializeMedia } from "./media";
 import { startServer } from "./server";
 import { initializeSocket } from "./socket";
@@ -15,12 +16,14 @@ export type State = {
   mainWindow: BrowserWindow | null;
   tray: Tray | null;
   isQuitting: boolean;
+  config: Config | null;
 };
 
 export const state: State = {
   mainWindow: null,
   tray: null,
   isQuitting: false,
+  config: null,
 };
 
 app.whenReady().then(() => {
@@ -32,6 +35,9 @@ app.whenReady().then(() => {
 
   // Initialize media folder and media protocol
   initializeMedia();
+
+  // Initialize config
+  state.config = initializeConfig();
 
   // start express server for external display
   startServer();

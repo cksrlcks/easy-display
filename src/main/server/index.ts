@@ -1,6 +1,8 @@
+import { is } from "@electron-toolkit/utils";
 import express from "express";
 import path from "path";
 
+import { state } from "..";
 import { MEDIA_FOLDER } from "../constants";
 
 /**
@@ -13,8 +15,12 @@ export function startServer() {
   app.use(express.static(path.join(__dirname, "../renderer")));
 
   app.get("/screen", (_, res) => {
+    if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
+      return res.redirect(process.env["ELECTRON_RENDERER_URL"] + "/screen");
+    }
+
     res.sendFile(path.join(__dirname, "../renderer/screen.html"));
   });
 
-  app.listen(3000);
+  app.listen(state.config?.mediaServerPort || 3000);
 }
