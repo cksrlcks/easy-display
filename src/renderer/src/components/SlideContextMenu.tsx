@@ -16,15 +16,15 @@ import {
   ContextMenuTrigger,
 } from "@renderer/components/ui/context-menu";
 import { PropsWithChildren, useState } from "react";
-import { InternalFile } from "src/shared/types";
+import { ExplorerItem } from "src/shared/types";
 
 type SlideContextMenu = PropsWithChildren<{
   onDelete: () => void;
   onOpen?: () => void;
-  media?: InternalFile;
+  file?: ExplorerItem;
 }>;
 
-export default function SlideContextMenu({ children, media, onDelete, onOpen }: SlideContextMenu) {
+export default function SlideContextMenu({ children, file, onDelete, onOpen }: SlideContextMenu) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -32,14 +32,14 @@ export default function SlideContextMenu({ children, media, onDelete, onOpen }: 
       <ContextMenu>
         <ContextMenuTrigger>{children}</ContextMenuTrigger>
         <ContextMenuContent className="w-32">
-          {media && (
+          {file && (
             <div className="p-2">
               <div className="text-xs">
-                <span className="break-all">{media.name}</span>
-                <span className="whitespace-nowrap">.{media.ext}</span>
+                <span className="break-all">{file.name}</span>
+                <span className="whitespace-nowrap">.{file.ext}</span>
               </div>
               <span className="text-xs text-muted-foreground">
-                {(media.size / 1024 / 1024).toFixed(2)} MB
+                {(file.size / 1024 / 1024).toFixed(2)} MB
               </span>
             </div>
           )}

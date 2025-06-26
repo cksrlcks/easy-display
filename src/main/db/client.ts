@@ -38,6 +38,16 @@ function initDatabase(dbFilePath: string) {
       "order" INTEGER NOT NULL,
       FOREIGN KEY (screen_id) REFERENCES screen(id) ON DELETE CASCADE
     );
+
+    CREATE TABLE IF NOT EXISTS devices (
+      id TEXT PRIMARY KEY,
+      tv_id TEXT NOT NULL,
+      ip TEXT NOT NULL,
+      name TEXT NOT NULL,
+      alias TEXT NOT NULL,
+      screen_id TEXT,
+      FOREIGN KEY (screen_id) REFERENCES screen(id) ON DELETE SET NULL
+    );
   `);
 
   return db;

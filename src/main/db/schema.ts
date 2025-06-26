@@ -32,11 +32,28 @@ export const slides = sqliteTable("slide", {
 
 export const screenRelations = relations(screens, ({ many }) => ({
   slides: many(slides),
+  devices: many(devices),
 }));
 
 export const slideRelations = relations(slides, ({ one }) => ({
   screen: one(screens, {
     fields: [slides.screenId],
+    references: [screens.id],
+  }),
+}));
+
+export const devices = sqliteTable("devices", {
+  id: text("id").primaryKey(),
+  ip: text("ip").notNull(),
+  tvId: text("tv_id").notNull(),
+  name: text("name").notNull(),
+  alias: text("alias").notNull(),
+  screenId: text("screen_id").references(() => screens.id, { onDelete: "set null" }),
+});
+
+export const deviceRelations = relations(devices, ({ one }) => ({
+  screen: one(screens, {
+    fields: [devices.screenId],
     references: [screens.id],
   }),
 }));

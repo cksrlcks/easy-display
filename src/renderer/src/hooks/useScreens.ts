@@ -1,4 +1,4 @@
-import { InternalFile, Screen, Slide } from "@shared/types";
+import { Screen, Slide } from "@shared/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -6,7 +6,7 @@ export function useScreens() {
   return useQuery({
     queryKey: ["screens"],
     queryFn: async () => {
-      const response = await window.api.getScreenList();
+      const response = await window.api.screenList();
       if (!response.success) {
         toast.error(response.message);
       }
@@ -19,7 +19,7 @@ export function useScreenById(id?: string) {
   return useQuery({
     queryKey: ["screens", id],
     queryFn: async () => {
-      const response = await window.api.getScreenById({ id });
+      const response = await window.api.screenGet({ id });
       if (!response.success) {
         toast.error(response.message);
       }
@@ -33,10 +33,10 @@ export function useScreenActions() {
   const queryClient = useQueryClient();
 
   const onAddScreen = async (data: Pick<Screen, "alias" | "direction">) => {
-    const response = await window.api.createScreen(data);
+    const response = await window.api.screenCreate(data);
 
     if (!response.success) {
-      throw new Error(response.message);
+      toast.error(response.message);
     }
 
     toast.success(response.message);
@@ -44,10 +44,10 @@ export function useScreenActions() {
   };
 
   const onEditScreen = async (data: Pick<Screen, "id" | "alias" | "direction">) => {
-    const response = await window.api.updateScreen(data);
+    const response = await window.api.screenUpdate(data);
 
     if (!response.success) {
-      throw new Error(response.message);
+      toast.error(response.message);
     }
 
     toast.success(response.message);
@@ -55,7 +55,7 @@ export function useScreenActions() {
   };
 
   const onDeleteScreen = async (data: Pick<Screen, "id">) => {
-    const response = await window.api.deleteScreen(data);
+    const response = await window.api.screenDelete(data);
 
     if (!response.success) {
       toast.error(response.message);
@@ -71,14 +71,9 @@ export function useScreenActions() {
     slides,
   }: {
     screenId: Screen["id"];
-    slides: (Pick<Slide, "duration" | "show"> & { file: InternalFile | null })[];
+    slides: Pick<Slide, "duration" | "show" | "filePath">[];
   }) => {
-    const convertedData = slides.map((slide) => ({
-      ...slide,
-      filePath: slide.file ? slide.file.path : null,
-    }));
-
-    const response = await window.api.updateScreenSlides({ screenId, slides: convertedData });
+    const response = await window.api.screenUpdateSlides({ screenId, slides });
 
     if (!response.success) {
       toast.error(response.message);

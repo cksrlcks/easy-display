@@ -2,7 +2,7 @@ import { DragDropEvents, DragDropProvider } from "@dnd-kit/react";
 import { isSortable } from "@dnd-kit/react/sortable";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DraggableItem from "@renderer/components/DraggableItem";
-import { FileInfo, FileThumbnail } from "@renderer/components/File";
+import FileItem from "@renderer/components/FileItem";
 import MediaDrawer from "@renderer/components/MediaDrawer";
 import SlideContextMenu from "@renderer/components/SlideContextMenu";
 import { Button } from "@renderer/components/ui/button";
@@ -15,11 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@renderer/components/ui/select";
-import { useMediaActions } from "@renderer/hooks/useMediaFiles";
+import { useExplorer } from "@renderer/hooks/useExplorer";
 import { useScreenActions, useScreenById } from "@renderer/hooks/useScreens";
 import { isVideoFile } from "@renderer/lib/utils";
-import { InternalFile } from "@shared/types";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ExplorerItem } from "@shared/types";
+import { ArrowLeft, Check, Eye, EyeOff, Import } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
@@ -32,8 +32,8 @@ const ScreenSettingFormSchema = z.object({
       show: z.boolean(),
       file: z
         .object({
-          base: z.string(),
-          ext: z.string(),
+          isDirectory: z.boolean(),
+          ext: z.string().optional(),
           path: z.string(),
           name: z.string(),
           size: z.number(),
@@ -48,9 +48,9 @@ type ScreenSettingFormType = z.infer<typeof ScreenSettingFormSchema>;
 export default function ScreenSetting() {
   const params = useParams<{ screenId: string }>();
   const navigate = useNavigate();
-  const { data, isPending, refetch } = useScreenById(params.screenId);
+  const { data, isPending } = useScreenById(params.screenId);
   const { updateScreenSlides } = useScreenActions();
-  const { onOpenFile } = useMediaActions();
+  const { openFile } = useExplorer();
 
   const form = useForm<ScreenSettingFormType>({
     resolver: zodResolver(ScreenSettingFormSchema),
@@ -59,6 +59,8 @@ export default function ScreenSetting() {
       slides: data?.slides || [],
     },
   });
+
+  console.log("ScreenSettingForm", form.formState.errors);
 
   useEffect(() => {
     if (data?.slides) {
@@ -71,12 +73,12 @@ export default function ScreenSetting() {
     name: "slides",
   });
 
-  const handleAddSlide = async (files: InternalFile[]) => {
+  const handleAddSlide = async (files: ExplorerItem[]) => {
     if (!files || files.length === 0) return;
 
     files.forEach((file) => {
       append({
-        duration: isVideoFile(file.ext) ? null : 10,
+        duration: file.ext && isVideoFile(file.ext) ? null : 10,
         show: true,
         file,
       });
@@ -96,10 +98,8 @@ export default function ScreenSetting() {
 
     await updateScreenSlides({
       screenId: params.screenId,
-      slides: data.slides,
+      slides: data.slides.map((slide) => ({ ...slide, filePath: slide.file?.path || null })),
     });
-
-    refetch();
   });
 
   return (
@@ -113,10 +113,17 @@ export default function ScreenSetting() {
           <div className="flex items-center gap-2">
             <MediaDrawer onSelect={handleAddSlide}>
               <Button type="button" size="sm" variant="outline" className="text-xs">
+                <Import />
                 미디어 추가
               </Button>
             </MediaDrawer>
-            <Button type="submit" size="sm" variant="outline">
+            <Button
+              type="submit"
+              size="sm"
+              variant="outline"
+              disabled={form.formState.isSubmitting || isPending || !form.formState.isDirty}
+            >
+              <Check />
               저장
             </Button>
           </div>
@@ -129,27 +136,26 @@ export default function ScreenSetting() {
           )}
 
           <DragDropProvider onDragEnd={handleDragEnd}>
-            <ul className="grid grid-cols-5 gap-4">
+            <ul className="grid grid-cols-5 gap-x-4 gap-y-6">
               {fields.map((fieldItem, index) => (
                 <DraggableItem key={fieldItem.id} id={fieldItem.id} index={index}>
                   {({ handler }) => (
                     <li key={fieldItem.id}>
                       <div className="mb-4">
                         <div className="relative mb-2 cursor-pointer" ref={handler}>
-                          <span className="absolute left-3 bottom-3 w-5 h-5 flex justify-center items-center bg-white text-black rounded-full text-xs font-medium">
+                          <span className="absolute left-3 top-3 w-5 h-5 flex justify-center items-center bg-white text-black rounded-full text-xs font-medium">
                             {index + 1}
                           </span>
                           <SlideContextMenu
                             onDelete={() => remove(index)}
                             {...(fieldItem.file && {
-                              media: fieldItem.file,
-                              onOpen: () => onOpenFile(fieldItem.file!.base),
+                              file: fieldItem.file,
+                              onOpen: () => openFile(fieldItem.file!.path),
                             })}
                           >
-                            <FileThumbnail media={fieldItem.file} />
+                            <FileItem file={fieldItem.file} showInfo />
                           </SlideContextMenu>
                         </div>
-                        <FileInfo media={fieldItem.file} />
                       </div>
                       <div className="flex items-center gap-2">
                         <FormField
@@ -190,7 +196,7 @@ export default function ScreenSetting() {
                                   <SelectItem value="8">8초</SelectItem>
                                   <SelectItem value="10">10초</SelectItem>
                                   <SelectItem value="12">12초</SelectItem>
-                                  {fieldItem.file && isVideoFile(fieldItem.file.ext) && (
+                                  {fieldItem.file?.ext && isVideoFile(fieldItem.file.ext) && (
                                     <SelectItem value="video-time">비디오 시간</SelectItem>
                                   )}
                                 </SelectGroup>

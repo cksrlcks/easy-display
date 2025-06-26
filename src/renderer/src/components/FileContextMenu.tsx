@@ -15,18 +15,18 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@renderer/components/ui/context-menu";
+import { ExplorerItem } from "@shared/types";
 import { PropsWithChildren, useState } from "react";
-import { InternalFile } from "src/shared/types";
 
 type FileContextMenuProps = PropsWithChildren<{
-  media: InternalFile;
+  file: ExplorerItem;
   onDelete: () => void;
   onOpen: () => void;
 }>;
 
 export default function FileContextMenu({
   children,
-  media,
+  file,
   onDelete,
   onOpen,
 }: FileContextMenuProps) {
@@ -39,11 +39,11 @@ export default function FileContextMenu({
         <ContextMenuContent className="w-32">
           <div className="p-2">
             <div className="text-xs">
-              <span className="break-all">{media.name}</span>
-              <span className="whitespace-nowrap">.{media.ext}</span>
+              <span className="break-all">{file.name}</span>
+              <span className="whitespace-nowrap">.{file.ext}</span>
             </div>
             <span className="text-xs text-muted-foreground">
-              {(media.size / 1024 / 1024).toFixed(2)} MB
+              {(file.size / 1024 / 1024).toFixed(2)} MB
             </span>
           </div>
           <ContextMenuItem onClick={onOpen}>

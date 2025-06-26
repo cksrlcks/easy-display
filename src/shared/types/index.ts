@@ -1,11 +1,11 @@
 export type IPCResponse<T = void> = Promise<{ success: boolean; message?: string; data?: T }>;
 
-export type InternalFile = {
-  base: string;
-  ext: string;
-  path: string;
+export type ExplorerItem = {
   name: string;
+  isDirectory: boolean;
   size: number;
+  ext?: string;
+  path: string;
 };
 
 export type Screen = {
@@ -31,6 +31,22 @@ export type ScreenWithSlides = Screen & {
 
 export type ScreenWithFileBasedSlides = Screen & {
   slides: (Omit<Slide, "filePath"> & {
-    file: InternalFile | null;
+    file: Omit<ExplorerItem, "isDirectory"> | null;
   })[];
+};
+
+export type Device = {
+  id: string;
+  tvId: string;
+  ip: string;
+  name: string;
+  alias: string;
+  screenId?: string | null;
+};
+
+export type LocalDevice = {
+  tvId: string;
+  tvName: string;
+  ip: string;
+  message: string;
 };

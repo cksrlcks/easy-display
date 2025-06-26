@@ -1,6 +1,8 @@
 import { cn } from "@renderer/lib/utils";
 import { Projector, Tv } from "lucide-react";
 
+import ScreenFrame from "./ScreenFrame";
+
 type ScreenProps = {
   type: "screen" | "device";
   className?: string;
@@ -8,15 +10,15 @@ type ScreenProps = {
 
 export default function Screen({ type, className }: ScreenProps) {
   return (
-    <div
+    <ScreenFrame
       className={cn(
-        "aspect-video w-full max-w-[300px] rounded-sm flex items-center justify-center text-white",
-        type === "screen" ? "bg-[#58DC9E]" : "bg-[#111111]",
+        "flex items-center justify-center text-white bg-gradient-to-tl shadow-lg",
+        type === "screen" ? "to-[#58DC9E] from-[#008e76]" : "bg-[#111111]",
         className,
       )}
     >
       {type === "screen" ? <Projector size={48} /> : <Tv size={48} />}
       <span className="sr-only">{type}</span>
-    </div>
+    </ScreenFrame>
   );
 }

@@ -1,5 +1,5 @@
-import { app } from "electron";
+import { app, ipcMain } from "electron";
 
-export async function quitApp() {
+ipcMain.handle("quit-app", () => {
   app.quit();
-}
+});

@@ -8,7 +8,7 @@ import { State } from ".";
 export function createWindow(state: State) {
   const mainWindow = new BrowserWindow({
     width: 1280,
-    height: 800,
+    height: 840,
     show: false,
     autoHideMenuBar: true,
     icon,

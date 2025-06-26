@@ -1,17 +1,17 @@
-import { app, BrowserWindow, dialog, Menu, Tray } from "electron";
+import { app, BrowserWindow, dialog, Menu, shell, Tray } from "electron";
 
-import icon from "../../resources/icon.png?asset";
+import trayIcon from "../../resources/tray-icon.png?asset";
 import { State } from ".";
-import { MESSAGE } from "./constants";
+import { COMMON_MESSAGE, MEDIA_FOLDER } from "./constants";
 
 async function handleTrayQuit(window: BrowserWindow | null) {
   if (!window) return;
 
   const result = await dialog.showMessageBox(window, {
     type: "question",
-    buttons: [MESSAGE.YES, MESSAGE.NO],
-    title: MESSAGE.CONFIR_QUIT_TITLE,
-    message: MESSAGE.CONFIRM_QUIT,
+    buttons: [COMMON_MESSAGE.YES, COMMON_MESSAGE.NO],
+    title: COMMON_MESSAGE.CONFIR_QUIT_TITLE,
+    message: COMMON_MESSAGE.CONFIRM_QUIT,
   });
 
   if (result.response === 0) {
@@ -20,10 +20,15 @@ async function handleTrayQuit(window: BrowserWindow | null) {
 }
 
 export function initializeTray(state: State) {
-  const tray = new Tray(icon);
+  const tray = new Tray(trayIcon);
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: MESSAGE.CANCEL, type: "normal", click: () => handleTrayQuit(state.mainWindow) },
+    {
+      label: COMMON_MESSAGE.OPEN_MEDIA_FOLDER,
+      type: "normal",
+      click: () => shell.openPath(MEDIA_FOLDER),
+    },
+    { label: COMMON_MESSAGE.QUITE, type: "normal", click: () => handleTrayQuit(state.mainWindow) },
   ]);
 
   tray.setContextMenu(contextMenu);
