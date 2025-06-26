@@ -7,7 +7,12 @@ export function useLocalDevices() {
   const [localDevices, setLocalDevices] = useState<LocalDevice[]>([]);
 
   useEffect(() => {
-    window.api.discoveredTvs(setLocalDevices);
+    window.api.socketStartDiscovery();
+    window.api.socketDiscoveredDevices(setLocalDevices);
+
+    return () => {
+      window.api.socketStopDiscovery();
+    };
   }, []);
 
   return localDevices;

@@ -42,9 +42,9 @@ declare global {
       deviceDelete: (data: Pick<Device, "id">) => IPCResponse<void>;
 
       // socket
-      discoveredTvs: (
-        callback: (tvs: { tvId: string; tvName: string; ip: string; message: string }[]) => void,
-      ) => void;
+      socketStartDiscovery: () => IPCResponse<void>;
+      socketStopDiscovery: () => IPCResponse<void>;
+      socketDiscoveredDevices: (callback: (data: LocalDevice[]) => void) => void;
     };
   }
 }

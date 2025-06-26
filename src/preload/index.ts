@@ -1,6 +1,6 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
-import { Device, Screen, Slide } from "src/shared/types";
+import { Device, LocalDevice, Screen, Slide } from "src/shared/types";
 
 const api = {
   // general
@@ -38,9 +38,10 @@ const api = {
   deviceDelete: (data: Pick<Device, "id">) => ipcRenderer.invoke("device:delete", data),
 
   // socket
-  discoveredTvs: (
-    callback: (tvs: { tvId: string; tvName: string; ip: string; message: string }[]) => void,
-  ) => ipcRenderer.on("discovered-tvs", (_, data) => callback(data)),
+  socketStartDiscovery: () => ipcRenderer.invoke("socket:start-discovery"),
+  socketStopDiscovery: () => ipcRenderer.invoke("socket:stop-discovery"),
+  socketDiscoveredDevices: (callback: (data: LocalDevice[]) => void) =>
+    ipcRenderer.on("socket:discovered-devices", (_, data) => callback(data)),
 };
 
 if (process.contextIsolated) {

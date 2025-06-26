@@ -2,12 +2,12 @@ import "./ipc";
 import "./db/client";
 
 import { electronApp, optimizer } from "@electron-toolkit/utils";
-import dgram from "dgram";
 import { app, BrowserWindow, Tray } from "electron";
 
 import icon from "../../resources/icon.png?asset";
 import { initializeMedia } from "./media";
 import { startServer } from "./server";
+import { initializeSocket } from "./socket";
 import { initializeTray } from "./tray";
 import { createWindow } from "./window";
 
@@ -17,7 +17,7 @@ export type State = {
   isQuitting: boolean;
 };
 
-const state: State = {
+export const state: State = {
   mainWindow: null,
   tray: null,
   isQuitting: false,
@@ -55,60 +55,7 @@ app.whenReady().then(() => {
     }
   });
 
-  // display
-  const PORT = 41234;
-  const socket = dgram.createSocket("udp4");
-  const discoveredTVs = new Map<
-    string,
-    { tvName: string; ip: string; message: string; lastSeen: number }
-  >();
-
-  function parseTV(message: string): { tvId: string; tvName: string } | null {
-    if (!message.startsWith("easy-display:")) return null;
-    const parsed = Object.fromEntries(
-      message
-        .replace("easy-display:", "")
-        .split(";")
-        .map((s) => s.split("=")),
-    );
-    if (!parsed.tvId || parsed.status !== "discover") return null;
-    return { tvId: parsed.tvId, tvName: parsed.tvName || "Device" };
-  }
-
-  // 1. binding
-  socket.bind(PORT);
-
-  // 2. listening
-  socket.on("listening", () => {
-    const address = socket.address();
-    console.log(`UDP Server listening on ${address.address}:${address.port}`);
-    socket.setBroadcast(true);
-  });
-
-  // 3. message
-  socket.on("message", (msg, rinfo) => {
-    const message = msg.toString("utf-8");
-    const parsedInfo = parseTV(message);
-    if (!parsedInfo) return;
-
-    const { tvId, tvName } = parsedInfo;
-
-    console.log(`✅ Discovered TV: ${tvId} at ${rinfo.address}`);
-    discoveredTVs.set(tvId, { tvName, ip: rinfo.address, message, lastSeen: Date.now() });
-  });
-
-  function sendDiscoveredTvs() {
-    if (!state.mainWindow) return;
-
-    const now = Date.now();
-    const activeTvs = [...discoveredTVs.entries()]
-      .filter(([, { lastSeen }]) => now - lastSeen < 15000)
-      .map(([tvId, { tvName, ip, message }]) => ({ tvId, tvName, ip, message }));
-
-    state.mainWindow.webContents.send("discovered-tvs", activeTvs);
-  }
-
-  setInterval(sendDiscoveredTvs, 2000);
+  initializeSocket();
 });
 
 app.on("window-all-closed", () => {
