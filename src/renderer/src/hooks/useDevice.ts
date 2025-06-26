@@ -35,6 +35,8 @@ export function useDeviceById(id?: string) {
   return useQuery({
     queryKey: ["devices", id],
     queryFn: async () => {
+      if (!id) return;
+
       const response = await window.api.deviceGet({ id });
       if (!response.success) {
         toast.error(response.message);
@@ -48,11 +50,11 @@ export function useDeviceById(id?: string) {
 export function useDeviceActions() {
   const queryClient = useQueryClient();
 
-  const onAddDevice = async (data: Omit<Device, "id" | "screenId">) => {
+  const onAddDevice = async (data: Partial<Device>) => {
     const response = await window.api.deviceCreate(data);
 
     if (!response.success) {
-      toast.error(response.message);
+      throw new Error(response.message);
     }
 
     toast.success(response.message);
@@ -63,7 +65,7 @@ export function useDeviceActions() {
     const response = await window.api.deviceUpdate(data);
 
     if (!response.success) {
-      toast.error(response.message);
+      throw new Error(response.message);
     }
 
     toast.success(response.message);
@@ -74,7 +76,7 @@ export function useDeviceActions() {
     const response = await window.api.deviceDelete(data);
 
     if (!response.success) {
-      toast.error(response.message);
+      throw new Error(response.message);
     }
 
     toast.success(response.message);

@@ -39,15 +39,10 @@ const addScreenFormSchema = z.object({
 
 type AddScreenFormType = z.infer<typeof addScreenFormSchema>;
 
-type AddScreenDialogProps =
-  | PropsWithChildren<{
-      initialData?: undefined;
-      onSubmit: (data: Pick<Screen, "alias" | "direction">) => Promise<void>;
-    }>
-  | PropsWithChildren<{
-      initialData: Screen;
-      onSubmit: (data: Pick<Screen, "id" | "alias" | "direction">) => Promise<void>;
-    }>;
+type AddScreenDialogProps = PropsWithChildren<{
+  initialData?: Partial<Screen>;
+  onSubmit: (data: Partial<Screen>) => Promise<void>;
+}>;
 
 export default function ScreenFormDialog({
   initialData,
@@ -65,11 +60,7 @@ export default function ScreenFormDialog({
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      if (isEditMode) {
-        await onSubmit({ id: initialData!.id, alias: data.alias, direction: data.direction });
-      } else {
-        await onSubmit({ alias: data.alias, direction: data.direction });
-      }
+      await onSubmit({ id: initialData!.id, alias: data.alias, direction: data.direction });
 
       form.reset();
       setOpen(false);

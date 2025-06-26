@@ -60,8 +60,6 @@ export default function ScreenSetting() {
     },
   });
 
-  console.log("ScreenSettingForm", form.formState.errors);
-
   useEffect(() => {
     if (data?.slides) {
       form.reset({ slides: data.slides });

@@ -30,12 +30,14 @@ const addDeviceFormSchema = z.object({
 type AddDeviceFormType = z.infer<typeof addDeviceFormSchema>;
 
 type AddDeviceDialogProps = PropsWithChildren<{
-  initialData: Omit<Device, "id" | "screenId"> & { id?: string };
-  onSubmit: (data: Omit<Device, "id" | "screenId"> & { id?: string }) => Promise<void>;
+  initialData: Partial<Device>;
+  onDelete?: (id: string) => Promise<void>;
+  onSubmit: (data: Partial<Device>) => Promise<void>;
 }>;
 
 export default function DeviceFormDialog({
   initialData,
+  onDelete,
   onSubmit,
   children,
 }: AddDeviceDialogProps) {
@@ -61,6 +63,16 @@ export default function DeviceFormDialog({
   const handleFormResetOnClose = (open: boolean) => {
     if (!open) form.reset();
     setOpen(open);
+  };
+
+  const handleDeleteDevice = async () => {
+    if (!initialData.id) return;
+    try {
+      await onDelete?.(initialData.id);
+      setOpen(false);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -148,6 +160,16 @@ export default function DeviceFormDialog({
               />
             </div>
             <DialogFooter>
+              {isEditMode && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mr-auto"
+                  onClick={handleDeleteDevice}
+                >
+                  삭제
+                </Button>
+              )}
               <DialogClose asChild>
                 <Button variant="outline">취소</Button>
               </DialogClose>

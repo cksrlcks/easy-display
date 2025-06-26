@@ -11,7 +11,7 @@ import { Device, Screen as ScreenType } from "@shared/types";
 export default function Setting() {
   const { data: devices, isPending: isPendingDevices } = useDevices();
   const { data: screens, isPending: isPendingScreens } = useScreens();
-  const { onEditDevice } = useDeviceActions();
+  const { onEditDevice, onDeleteDevice } = useDeviceActions();
 
   const isPending = isPendingDevices || isPendingScreens;
 
@@ -24,6 +24,10 @@ export default function Setting() {
 
   const handleUpdateDeviceProfile = async (deviceId: Device["id"], data: Partial<Device>) => {
     await onEditDevice({ ...data, id: deviceId });
+  };
+
+  const handleDeleteDevice = async (id: Device["id"]) => {
+    await onDeleteDevice({ id });
   };
 
   return (
@@ -52,12 +56,8 @@ export default function Setting() {
                     value={device.alias || device.name || "TV"}
                   />
                   <DeviceFormDialog
-                    initialData={{
-                      tvId: device.id,
-                      name: device.name,
-                      ip: device.ip,
-                      alias: device.alias,
-                    }}
+                    initialData={device}
+                    onDelete={handleDeleteDevice}
                     onSubmit={(data) => handleUpdateDeviceProfile(device.id, data)}
                   >
                     <Button variant="outline">수정</Button>

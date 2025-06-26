@@ -19,6 +19,8 @@ export function useScreenById(id?: string) {
   return useQuery({
     queryKey: ["screens", id],
     queryFn: async () => {
+      if (!id) return;
+
       const response = await window.api.screenGet({ id });
       if (!response.success) {
         toast.error(response.message);
@@ -32,22 +34,22 @@ export function useScreenById(id?: string) {
 export function useScreenActions() {
   const queryClient = useQueryClient();
 
-  const onAddScreen = async (data: Pick<Screen, "alias" | "direction">) => {
+  const onAddScreen = async (data: Partial<Screen>) => {
     const response = await window.api.screenCreate(data);
 
     if (!response.success) {
-      toast.error(response.message);
+      throw new Error(response.message);
     }
 
     toast.success(response.message);
     queryClient.invalidateQueries({ queryKey: ["screens"] });
   };
 
-  const onEditScreen = async (data: Pick<Screen, "id" | "alias" | "direction">) => {
+  const onEditScreen = async (data: Partial<Screen>) => {
     const response = await window.api.screenUpdate(data);
 
     if (!response.success) {
-      toast.error(response.message);
+      throw new Error(response.message);
     }
 
     toast.success(response.message);
@@ -58,8 +60,7 @@ export function useScreenActions() {
     const response = await window.api.screenDelete(data);
 
     if (!response.success) {
-      toast.error(response.message);
-      return;
+      throw new Error(response.message);
     }
 
     toast.success(response.message);
@@ -71,13 +72,12 @@ export function useScreenActions() {
     slides,
   }: {
     screenId: Screen["id"];
-    slides: Pick<Slide, "duration" | "show" | "filePath">[];
+    slides: Partial<Slide>[];
   }) => {
     const response = await window.api.screenUpdateSlides({ screenId, slides });
 
     if (!response.success) {
-      toast.error(response.message);
-      return;
+      throw new Error(response.message);
     }
 
     toast.success(response.message);

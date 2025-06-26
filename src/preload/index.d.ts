@@ -1,7 +1,9 @@
 import { ElectronAPI } from "@electron-toolkit/preload";
 import {
+  Device,
   ExplorerItem,
   IPCResponse,
+  Screen,
   ScreenWithFileBasedSlides,
   ScreenWithSlides,
   Slide,
@@ -26,18 +28,18 @@ declare global {
       // screen
       screenList: () => IPCResponse<ScreenWithSlides[]>;
       screenGet: (data: Pick<Screen, "id">) => IPCResponse<ScreenWithFileBasedSlides>;
-      screenCreate: (data: Pick<Screen, "alias" | "direction">) => IPCResponse<void>;
-      screenUpdate: (data: Pick<Screen, "id" | "alias" | "direction">) => IPCResponse<void>;
+      screenCreate: (data: Partial<Screen>) => IPCResponse<void>;
+      screenUpdate: (data: Partial<Screen>) => IPCResponse<void>;
       screenDelete: (data: Pick<Screen, "id">) => IPCResponse<void>;
       screenUpdateSlides: (data: {
         screenId: Screen["id"];
-        slides: Pick<Slide, "duration" | "show" | "filePath">[];
+        slides: Partial<Slide>[];
       }) => IPCResponse<void>;
 
       // device
       deviceList: () => IPCResponse<Device[]>;
       deviceGet: (data: Pick<Device, "id">) => IPCResponse<Device>;
-      deviceCreate: (data: Omit<Device, "id" | "screenId">) => IPCResponse<void>;
+      deviceCreate: (data: Partial<Device>) => IPCResponse<void>;
       deviceUpdate: (data: Partial<Device>) => IPCResponse<void>;
       deviceDelete: (data: Pick<Device, "id">) => IPCResponse<void>;
 

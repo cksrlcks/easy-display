@@ -19,21 +19,16 @@ const api = {
   // screen
   screenList: () => ipcRenderer.invoke("screen:list"),
   screenGet: (data: Pick<Screen, "id">) => ipcRenderer.invoke("screen:get", data),
-  screenCreate: (data: Pick<Screen, "alias" | "direction">) =>
-    ipcRenderer.invoke("screen:create", data),
-  screenUpdate: (data: Pick<Screen, "id" | "alias" | "direction">) =>
-    ipcRenderer.invoke("screen:update", data),
+  screenCreate: (data: Partial<Screen>) => ipcRenderer.invoke("screen:create", data),
+  screenUpdate: (data: Partial<Screen>) => ipcRenderer.invoke("screen:update", data),
   screenDelete: (data: Pick<Screen, "id">) => ipcRenderer.invoke("screen:delete", data),
-  screenUpdateSlides: (data: {
-    screenId: Screen["id"];
-    slides: Pick<Slide, "duration" | "show" | "filePath">[];
-  }) => ipcRenderer.invoke("screen:update-slides", data),
+  screenUpdateSlides: (data: { screenId: Screen["id"]; slides: Partial<Slide>[] }) =>
+    ipcRenderer.invoke("screen:update-slides", data),
 
   // device
   deviceList: () => ipcRenderer.invoke("device:list"),
   deviceGet: (data: Pick<Device, "id">) => ipcRenderer.invoke("device:get", data),
-  deviceCreate: (data: Omit<Device, "id" | "screenId">) =>
-    ipcRenderer.invoke("device:create", data),
+  deviceCreate: (data: Partial<Device>) => ipcRenderer.invoke("device:create", data),
   deviceUpdate: (data: Partial<Device>) => ipcRenderer.invoke("device:update", data),
   deviceDelete: (data: Pick<Device, "id">) => ipcRenderer.invoke("device:delete", data),
 

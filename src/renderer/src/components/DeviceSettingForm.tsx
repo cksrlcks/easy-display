@@ -11,6 +11,7 @@ import {
 } from "@renderer/components/ui/select";
 import { Device, Screen } from "@shared/types";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Form, FormField } from "./ui/form";
@@ -18,7 +19,7 @@ import { Form, FormField } from "./ui/form";
 type DeviceSettingFormProps = {
   device: Device;
   screens?: Screen[];
-  onSubmit: (deviceId: Device["id"], screenId?: Screen["id"]) => void;
+  onSubmit: (deviceId: Device["id"], screenId?: Screen["id"]) => Promise<void>;
   className?: string;
 };
 
@@ -44,7 +45,11 @@ export default function DeviceSettingForm({
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    onSubmit(device.id, data.screenId === "none" ? undefined : data.screenId);
+    try {
+      await onSubmit(device.id, data.screenId === "none" ? undefined : data.screenId);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.");
+    }
   });
 
   return (
