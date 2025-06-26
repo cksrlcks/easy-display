@@ -6,6 +6,7 @@ import Device from "./routes/Device";
 import Media from "./routes/Media";
 import Screen from "./routes/Screen";
 import ScreenSetting from "./routes/ScreenSetting";
+import Setting from "./routes/Setting";
 
 export const router = createHashRouter([
   {
@@ -33,6 +34,10 @@ export const router = createHashRouter([
       {
         path: "device",
         element: <Device />,
+      },
+      {
+        path: "setting",
+        element: <Setting />,
       },
     ],
   },

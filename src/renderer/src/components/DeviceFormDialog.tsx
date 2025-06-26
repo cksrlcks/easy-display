@@ -43,7 +43,7 @@ export default function DeviceFormDialog({
   const form = useForm<AddDeviceFormType>({
     resolver: zodResolver(addDeviceFormSchema),
     mode: "onSubmit",
-    defaultValues: { ...initialData, alias: initialData.name },
+    defaultValues: { ...initialData, alias: initialData.alias || initialData.name },
   });
 
   const isEditMode = !!initialData.id;

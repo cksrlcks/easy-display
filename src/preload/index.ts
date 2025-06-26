@@ -34,7 +34,7 @@ const api = {
   deviceGet: (data: Pick<Device, "id">) => ipcRenderer.invoke("device:get", data),
   deviceCreate: (data: Omit<Device, "id" | "screenId">) =>
     ipcRenderer.invoke("device:create", data),
-  deviceUpdate: (data: Device) => ipcRenderer.invoke("device:update", data),
+  deviceUpdate: (data: Partial<Device>) => ipcRenderer.invoke("device:update", data),
   deviceDelete: (data: Pick<Device, "id">) => ipcRenderer.invoke("device:delete", data),
 
   // socket

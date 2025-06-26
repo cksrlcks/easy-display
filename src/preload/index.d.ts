@@ -38,7 +38,7 @@ declare global {
       deviceList: () => IPCResponse<Device[]>;
       deviceGet: (data: Pick<Device, "id">) => IPCResponse<Device>;
       deviceCreate: (data: Omit<Device, "id" | "screenId">) => IPCResponse<void>;
-      deviceUpdate: (data: Device) => IPCResponse<void>;
+      deviceUpdate: (data: Partial<Device>) => IPCResponse<void>;
       deviceDelete: (data: Pick<Device, "id">) => IPCResponse<void>;
 
       // socket

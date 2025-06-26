@@ -107,7 +107,14 @@ ipcMain.handle(
   },
 );
 
-ipcMain.handle("device:update", async (_, data: Device): IPCResponse<void> => {
+ipcMain.handle("device:update", async (_, data: Partial<Device>): IPCResponse<void> => {
+  if (!data.id) {
+    return {
+      success: false,
+      message: "장치 ID가 필요합니다.",
+    };
+  }
+
   try {
     const existingDevice = await db.query.devices.findFirst({
       where: eq(devices.id, data.id),
@@ -126,7 +133,7 @@ ipcMain.handle("device:update", async (_, data: Device): IPCResponse<void> => {
         ip: data.ip,
         name: data.name,
         alias: data.alias,
-        screenId: data.screenId,
+        screenId: data.screenId || null,
       })
       .where(eq(devices.id, data.id));
 

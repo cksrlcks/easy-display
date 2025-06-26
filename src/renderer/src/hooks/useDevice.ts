@@ -59,7 +59,7 @@ export function useDeviceActions() {
     queryClient.invalidateQueries({ queryKey: ["devices"] });
   };
 
-  const onEditDevice = async (data: Device) => {
+  const onEditDevice = async (data: Partial<Device>) => {
     const response = await window.api.deviceUpdate(data);
 
     if (!response.success) {
