@@ -60,7 +60,7 @@ export default function ScreenFormDialog({
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      await onSubmit({ id: initialData!.id, alias: data.alias, direction: data.direction });
+      await onSubmit({ id: initialData?.id, alias: data.alias, direction: data.direction });
 
       form.reset();
       setOpen(false);

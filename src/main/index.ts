@@ -3,6 +3,7 @@ import "./db/client";
 
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { app, BrowserWindow, Tray } from "electron";
+import log from "electron-log/main";
 
 import icon from "../../resources/icon.png?asset";
 import { Config, initializeConfig } from "./config";
@@ -17,6 +18,7 @@ export type State = {
   tray: Tray | null;
   isQuitting: boolean;
   config: Config | null;
+  localIp: string | null;
 };
 
 export const state: State = {
@@ -24,7 +26,12 @@ export const state: State = {
   tray: null,
   isQuitting: false,
   config: null,
+  localIp: null,
 };
+
+log.initialize();
+
+log.info("Log from the main process");
 
 app.whenReady().then(() => {
   electronApp.setAppUserModelId("com.electron");

@@ -27,7 +27,7 @@ function startDeviceDiscovery() {
   socket = dgram.createSocket("udp4");
 
   // 1. binding
-  socket.bind(state.config.udpPort);
+  socket.bind(state.config.udpPort, "0.0.0.0");
 
   // 2. listening
   socket.on("listening", () => {
