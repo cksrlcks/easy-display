@@ -37,7 +37,7 @@ export type ScreenWithFileBasedSlides = Screen & {
 
 export type Device = {
   id: string;
-  tvId: string;
+  deviceId: string;
   ip: string;
   name: string;
   alias: string;
@@ -45,8 +45,7 @@ export type Device = {
 };
 
 export type LocalDevice = {
-  tvId: string;
-  tvName: string;
+  deviceId: string;
+  deviceName: string;
   ip: string;
-  message: string;
 };

@@ -21,7 +21,7 @@ import { Input } from "./ui/input";
 
 const addDeviceFormSchema = z.object({
   id: z.string().optional(),
-  tvId: z.string().min(1, "디바이스 ID를 입력하세요"),
+  deviceId: z.string().min(1, "디바이스 ID를 입력하세요"),
   ip: z.string().min(7, "유효한 IP 주소를 입력하세요"),
   name: z.string().min(1, "디바이스 이름을 입력하세요"),
   alias: z.string().min(1, "디바이스 별칭을 입력하세요"),
@@ -93,7 +93,7 @@ export default function DeviceFormDialog({
               <input type="text" {...form.register("id")} hidden />
               <FormField
                 control={form.control}
-                name="tvId"
+                name="deviceId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>디스플레이 TV ID</FormLabel>

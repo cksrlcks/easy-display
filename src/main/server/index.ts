@@ -49,7 +49,7 @@ export function startServer() {
     }
 
     const deviceData = await db.query.devices.findFirst({
-      where: eq(devices.tvId, deviceId),
+      where: eq(devices.deviceId, deviceId),
       columns: { screenId: true },
     });
 

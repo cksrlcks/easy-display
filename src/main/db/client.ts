@@ -41,7 +41,7 @@ function initDatabase(dbFilePath: string) {
 
     CREATE TABLE IF NOT EXISTS devices (
       id TEXT PRIMARY KEY,
-      tv_id TEXT NOT NULL,
+      device_id TEXT NOT NULL,
       ip TEXT NOT NULL,
       name TEXT NOT NULL,
       alias TEXT NOT NULL,

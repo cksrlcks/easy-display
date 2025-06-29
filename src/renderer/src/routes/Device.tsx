@@ -12,8 +12,8 @@ export default function Device() {
   const { data: devices } = useDevices();
   const { onAddDevice, onDeleteDevice } = useDeviceActions();
 
-  const registeredId = (tvId: string) => {
-    return devices?.find((device) => device.tvId === tvId)?.["id"] || "";
+  const registeredId = (deviceId: string) => {
+    return devices?.find((device) => device.deviceId === deviceId)?.["id"] || "";
   };
 
   const handleDeleteDevice = (id: string) => {
@@ -45,15 +45,15 @@ export default function Device() {
         ) : (
           <ul className="w-full">
             {localDevices.map((tv) => {
-              const id = registeredId(tv.tvId);
+              const id = registeredId(tv.deviceId);
               const isRegistered = id !== "";
 
               return (
-                <li key={tv.tvId} className="border-b pb-8 mb-8 last:border-0">
+                <li key={tv.deviceId} className="border-b pb-8 mb-8 last:border-0">
                   <div className="relative mb-2">
                     <span className="absolute left-4 top-4 flex gap-2 items-center text-sm">
                       <Network size={16} className="-mt-1/2 opacity-30" />
-                      <span>{tv.tvName}</span> |<span>{tv.ip}</span>
+                      <span>{tv.deviceName}</span> |<span>{tv.ip}</span>
                     </span>
                     <Screen type="device" className="max-w-full" />
                   </div>
@@ -78,10 +78,10 @@ export default function Device() {
                     ) : (
                       <DeviceFormDialog
                         initialData={{
-                          tvId: tv.tvId,
-                          name: tv.tvName,
+                          deviceId: tv.deviceId,
+                          name: tv.deviceName,
                           ip: tv.ip,
-                          alias: tv.tvName,
+                          alias: tv.deviceName,
                         }}
                         onSubmit={onAddDevice}
                       >

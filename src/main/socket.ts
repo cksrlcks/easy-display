@@ -1,25 +1,16 @@
 import { LocalDevice } from "@shared/types";
 import dgram from "dgram";
+import { eq } from "drizzle-orm";
 import { ipcMain } from "electron";
 
 import { state } from ".";
+import { db } from "./db/client";
+import { devices } from "./db/schema";
 
 let socket: dgram.Socket | null = null;
 let intervalTimer: NodeJS.Timeout | null = null;
 
-const discoveredTVs = new Map<string, LocalDevice & { message: string; lastSeen: number }>();
-
-function parseTV(message: string): { tvId: string; tvName: string } | null {
-  if (!message.startsWith("easy-display:")) return null;
-  const parsed = Object.fromEntries(
-    message
-      .replace("easy-display:", "")
-      .split(";")
-      .map((s) => s.split("=")),
-  );
-  if (!parsed.tvId || parsed.status !== "discover") return null;
-  return { tvId: parsed.tvId, tvName: parsed.tvName || "Device" };
-}
+const discoveredTVs = new Map<string, LocalDevice & { lastSeen: number }>();
 
 function startDeviceDiscovery() {
   if (socket || !state.config) return;
@@ -27,7 +18,9 @@ function startDeviceDiscovery() {
   socket = dgram.createSocket("udp4");
 
   // 1. binding
-  socket.bind(state.config.udpPort, "0.0.0.0");
+  socket.bind(state.config.udpPort, () => {
+    socket?.setBroadcast(true);
+  });
 
   // 2. listening
   socket.on("listening", () => {
@@ -39,25 +32,37 @@ function startDeviceDiscovery() {
   });
 
   // 3. message
-  socket.on("message", (msg, rinfo) => {
-    const message = msg.toString("utf-8");
-    const parsedInfo = parseTV(message);
-    if (!parsedInfo) return;
+  socket.on("message", async (msg, rinfo) => {
+    const data = JSON.parse(msg.toString("utf-8"));
+    console.log("📥 Received message:", data);
 
-    const { tvId, tvName } = parsedInfo;
+    if (data.name !== "easy-display" || data.type !== "discovery-ping") return;
 
-    console.log(`Discovered TV: ${tvId} at ${rinfo.address}`);
-    discoveredTVs.set(tvId, { tvId, tvName, ip: rinfo.address, message, lastSeen: Date.now() });
+    const { deviceId, deviceName = "device" } = data;
+
+    console.log(`Discovered Device: ${deviceId} at ${rinfo.address}`);
+    discoveredTVs.set(deviceId, {
+      deviceId,
+      deviceName,
+      ip: rinfo.address,
+      lastSeen: Date.now(),
+    });
 
     if (!socket || !state.config) return;
 
-    const reply = Buffer.from(
-      JSON.stringify({
-        type: "pc-response",
-        displayUrl: "/screen",
-        displayUrlPort: state.config.mediaServerPort,
-      }),
-    );
+    const deviceInfo = await db.query.devices.findFirst({
+      where: eq(devices.deviceId, deviceId),
+    });
+
+    const replyMessage = {
+      name: "easy-display",
+      type: "host-response",
+      port: state.config.mediaServerPort,
+      deviceId,
+      screenId: deviceInfo?.screenId || null,
+    };
+
+    const reply = Buffer.from(JSON.stringify(replyMessage));
     console.log(`📡 Sending reply to ${rinfo.address}:${rinfo.port}`);
     socket.send(reply, rinfo.port, rinfo.address);
   });
@@ -74,15 +79,13 @@ function stopSendingDiscoveredDevices() {
   }
 }
 
-function sendDiscoveredDevices(
-  discoveredDevices: Map<string, LocalDevice & { message: string; lastSeen: number }>,
-) {
+function sendDiscoveredDevices(discoveredDevices: Map<string, LocalDevice & { lastSeen: number }>) {
   if (!state.mainWindow) return;
 
   const now = Date.now();
   const activeDevices = [...discoveredDevices.entries()]
     .filter(([, { lastSeen }]) => now - lastSeen < 15000)
-    .map(([tvId, { tvName, ip, message }]) => ({ tvId, tvName, ip, message }));
+    .map(([deviceId, { deviceName, ip }]) => ({ deviceId, deviceName, ip }));
 
   state.mainWindow.webContents.send("socket:discovered-devices", activeDevices);
 }

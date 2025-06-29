@@ -45,7 +45,7 @@ export const slideRelations = relations(slides, ({ one }) => ({
 export const devices = sqliteTable("devices", {
   id: text("id").primaryKey(),
   ip: text("ip").notNull(),
-  tvId: text("tv_id").notNull(),
+  deviceId: text("device_id").notNull(),
   name: text("name").notNull(),
   alias: text("alias").notNull(),
   screenId: text("screen_id").references(() => screens.id, { onDelete: "set null" }),
