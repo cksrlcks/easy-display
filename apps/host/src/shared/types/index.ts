@@ -1,3 +1,5 @@
+import { Screen, Slide } from "@repo/types";
+
 export type IPCResponse<T = void> = Promise<{ success: boolean; message?: string; data?: T }>;
 
 export type ExplorerItem = {
@@ -6,27 +8,6 @@ export type ExplorerItem = {
   size: number;
   ext?: string;
   path: string;
-};
-
-export type Screen = {
-  id: string;
-  alias: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type Slide = {
-  id: string;
-  screenId: string;
-  filePath: string | null;
-  duration: number | null;
-  show: boolean;
-  order: number;
-  rotate: number;
-};
-
-export type ScreenWithSlides = Screen & {
-  slides: Slide[];
 };
 
 export type ScreenWithFileBasedSlides = Screen & {
@@ -42,10 +23,4 @@ export type Device = {
   name: string;
   alias: string;
   screenId?: string | null;
-};
-
-export type LocalDevice = {
-  deviceId: string;
-  deviceName: string;
-  ip: string;
 };

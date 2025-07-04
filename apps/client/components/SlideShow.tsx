@@ -1,7 +1,7 @@
 import { TEXT } from "@/constants/Text";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import { useHostIpStore } from "@/stores/useHostStore";
-import { Slide } from "@/types";
+import { Slide } from "@repo/types";
 import { useEventListener } from "expo";
 import { VideoView, useVideoPlayer } from "expo-video";
 import { useEffect, useState } from "react";
@@ -30,14 +30,18 @@ export default function SlideShow({ slides }: SlideShowProps) {
     setCurrentIndex((prev) => (prev + 1) % slides.length);
   };
 
-  const slideContent = (type: string) => {
+  const slideContent = (type: string | null) => {
+    if (!type) {
+      return <NotSupportedExtSlide onNext={handleNext} />;
+    }
+
     switch (type) {
       case "image":
         return <ImgSlide slide={currentSlide} onNext={handleNext} />;
       case "video":
         return <VideoSlide slide={currentSlide} onNext={handleNext} />;
       default:
-        return <NotSupportedExtSlide />;
+        return <NotSupportedExtSlide onNext={handleNext} />;
     }
   };
 
@@ -164,7 +168,12 @@ const VideoSlide = ({
   );
 };
 
-const NotSupportedExtSlide = () => {
+const NotSupportedExtSlide = ({ onNext }: { onNext: () => void }) => {
+  useEffect(() => {
+    const timer = setTimeout(onNext, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <ThemedView
       style={{

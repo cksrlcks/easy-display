@@ -1,5 +1,5 @@
 import HostIcon from "@/assets/images/icon-host.svg";
-import { Host } from "@/types";
+import { Host } from "@repo/types";
 import { Pressable, StyleSheet } from "react-native";
 
 import { ThemedText } from "./ThemedText";

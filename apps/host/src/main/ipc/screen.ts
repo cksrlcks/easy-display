@@ -1,10 +1,5 @@
-import {
-  IPCResponse,
-  Screen,
-  ScreenWithFileBasedSlides,
-  ScreenWithSlides,
-  Slide,
-} from "@shared/types";
+import { Screen, ScreenData, Slide } from "@repo/types";
+import { IPCResponse, ScreenWithFileBasedSlides } from "@shared/types";
 import { eq } from "drizzle-orm";
 import { ipcMain } from "electron";
 import fs from "fs";
@@ -32,7 +27,7 @@ const MESSAGE = {
   FAIL_TO_GET_SCREEN_LIST: "화면 목록을 가져오는 데 실패했습니다.",
 };
 
-ipcMain.handle("screen:list", async (): IPCResponse<ScreenWithSlides[]> => {
+ipcMain.handle("screen:list", async (): IPCResponse<ScreenData[]> => {
   try {
     const screens = await db.query.screens.findMany({
       with: {

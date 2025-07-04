@@ -1,10 +1,11 @@
-import { Device, LocalDevice } from "@shared/types";
+import { Client } from "@repo/types";
+import { Device } from "@shared/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function useLocalDevices() {
-  const [localDevices, setLocalDevices] = useState<LocalDevice[]>([]);
+  const [localDevices, setLocalDevices] = useState<Client[]>([]);
 
   useEffect(() => {
     window.api.socketStartDiscovery();

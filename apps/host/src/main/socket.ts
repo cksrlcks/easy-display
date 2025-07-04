@@ -1,4 +1,4 @@
-import { LocalDevice } from "@shared/types";
+import { Client, ClientMessage, HostMessage } from "@repo/types";
 import dgram from "dgram";
 import { eq } from "drizzle-orm";
 import { ipcMain } from "electron";
@@ -10,7 +10,7 @@ import { devices } from "./db/schema";
 let socket: dgram.Socket | null = null;
 let intervalTimer: NodeJS.Timeout | null = null;
 
-const discoveredTVs = new Map<string, LocalDevice & { lastSeen: number }>();
+const discoveredTVs = new Map<string, Client & { lastSeen: number }>();
 
 function startDeviceDiscovery() {
   if (socket || !state.config) return;
@@ -33,7 +33,7 @@ function startDeviceDiscovery() {
 
   // 3. message
   socket.on("message", async (msg, rinfo) => {
-    const data = JSON.parse(msg.toString("utf-8"));
+    const data = JSON.parse(msg.toString("utf-8")) as ClientMessage;
     console.log("Received message:", data);
 
     if (data.name !== "easy-display" || data.type !== "discovery-ping") return;
@@ -60,7 +60,7 @@ function startDeviceDiscovery() {
       port: state.config.mediaServerPort,
       deviceId,
       screenId: deviceInfo?.screenId || null,
-    };
+    } as HostMessage;
 
     const reply = Buffer.from(JSON.stringify(replyMessage));
     console.log(`Sending reply to ${rinfo.address}:${rinfo.port}`);
@@ -79,7 +79,7 @@ function stopSendingDiscoveredDevices() {
   }
 }
 
-function sendDiscoveredDevices(discoveredDevices: Map<string, LocalDevice & { lastSeen: number }>) {
+function sendDiscoveredDevices(discoveredDevices: Map<string, Client & { lastSeen: number }>) {
   if (!state.mainWindow) return;
 
   const now = Date.now();

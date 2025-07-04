@@ -9,8 +9,8 @@ import {
 } from "@/constants/Config";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import { useDeviceStore } from "@/stores/useDeviceStore";
-import { Host } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ClientMessage, Host, HostMessage } from "@repo/types";
 import { Buffer } from "buffer";
 import * as Crypto from "expo-crypto";
 import * as Device from "expo-device";
@@ -23,7 +23,7 @@ export default function useHostDiscovery() {
   const [status, setStatus] = useState<"idle" | "pending" | "error" | null>(null);
 
   const socketRef = useRef<ReturnType<typeof dgram.createSocket> | null>(null);
-  let intervalRef = useRef<NodeJS.Timeout | null>(null);
+  let intervalRef = useRef<number | null>(null);
 
   const setDeviceId = useDeviceStore((state) => state.setDeviceId);
   const deviceId = useDeviceStore((state) => state.deviceId);
@@ -72,7 +72,7 @@ export default function useHostDiscovery() {
     }, DISCOVERY_INTERVAL);
 
     socket.on("message", (msg, rinfo) => {
-      const data = JSON.parse(msg.toString("utf8"));
+      const data = JSON.parse(msg.toString("utf8")) as HostMessage;
       console.log("HOST 메세지 수신된:", data, rinfo);
 
       if (
@@ -119,7 +119,7 @@ export default function useHostDiscovery() {
         type: SEND_MESSAGE_TYPE,
         deviceId,
         deviceName: Device.deviceName,
-      }),
+      } as ClientMessage),
     );
 
     socketRef.current.send(message, 0, message.length, discoveryPort, targetAddress, (err) => {

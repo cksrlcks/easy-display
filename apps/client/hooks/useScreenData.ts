@@ -1,6 +1,6 @@
 import { useDeviceStore } from "@/stores/useDeviceStore";
 import { useHostIpStore } from "@/stores/useHostStore";
-import { ScreenData, Slide } from "@/types";
+import { ScreenData, Slide } from "@repo/types";
 import { useEffect, useState } from "react";
 
 export default function useScreenData() {
