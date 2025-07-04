@@ -3,7 +3,6 @@ import tseslint from "@electron-toolkit/eslint-config-ts";
 import eslintPluginReact from "eslint-plugin-react";
 import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import eslintPluginReactRefresh from "eslint-plugin-react-refresh";
-import eslintPluginSimpleImportSort from "eslint-plugin-simple-import-sort";
 
 export default tseslint.config(
   { ignores: ["**/node_modules", "**/dist", "**/out"] },
@@ -22,15 +21,12 @@ export default tseslint.config(
     plugins: {
       "react-hooks": eslintPluginReactHooks,
       "react-refresh": eslintPluginReactRefresh,
-      "simple-import-sort": eslintPluginSimpleImportSort,
     },
     rules: {
       ...eslintPluginReactHooks.configs.recommended.rules,
       ...eslintPluginReactRefresh.configs.vite.rules,
       "@typescript-eslint/explicit-function-return-type": "off",
       "react-refresh/only-export-components": "off",
-      "simple-import-sort/imports": "error",
-      "simple-import-sort/exports": "error",
     },
   },
   eslintConfigPrettier,
