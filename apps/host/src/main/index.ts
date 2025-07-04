@@ -33,6 +33,10 @@ log.initialize();
 
 log.info("Log from the main process");
 
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+}
+
 app.whenReady().then(() => {
   electronApp.setAppUserModelId("com.electron");
 
