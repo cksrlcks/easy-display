@@ -1,26 +1,26 @@
+import BackModal from "@/components/BackModal";
 import Discovery from "@/components/Discovery";
 import GuideQR from "@/components/GuideQR";
 import Intro from "@/components/Intro";
-import SettingModal from "@/components/SettingModal";
 import { GUIDE_URL } from "@/constants/Config";
-import { useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
+import useBackModal from "@/hooks/useBackModal";
+import { useRouter } from "expo-router";
 import { BackHandler, StyleSheet, View } from "react-native";
 
 export default function Home() {
-  const [visible, setVisible] = useState(false);
+  const { visible, onClose } = useBackModal();
+  const router = useRouter();
 
-  useFocusEffect(
-    useCallback(() => {
-      const subscription = BackHandler.addEventListener("hardwareBackPress", () => {
-        setVisible((prev) => !prev);
-
-        return true;
-      });
-
-      return () => subscription.remove();
-    }, []),
-  );
+  const backModalMenus = [
+    {
+      label: "설정",
+      onPress: () => router.push("/setting"),
+    },
+    {
+      label: "닫기",
+    },
+    { label: "앱 종료", onPress: () => BackHandler.exitApp() },
+  ];
 
   return (
     <View style={styles.container}>
@@ -32,11 +32,7 @@ export default function Home() {
         <Discovery />
       </View>
       <View style={{ height: 0, width: 0, backgroundColor: "red" }} focusable />
-      <SettingModal
-        visible={visible}
-        onClose={() => setVisible(false)}
-        onRequestClose={() => setVisible(false)}
-      />
+      <BackModal visible={visible} onClose={onClose} menus={backModalMenus} />
     </View>
   );
 }

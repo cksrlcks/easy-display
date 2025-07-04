@@ -1,43 +1,38 @@
 import { TEXT } from "@/constants/Text";
 import * as Application from "expo-application";
-import { useRouter } from "expo-router";
-import { BackHandler, Modal, ModalProps, Pressable, StyleSheet } from "react-native";
+import { Modal, ModalProps, Pressable, StyleSheet } from "react-native";
 
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
 
-type SettingModalProps = ModalProps & {
+type LeftModalProps = ModalProps & {
+  menus: {
+    label: string;
+    onPress?: () => void;
+  }[];
   onClose: () => void;
 };
 
-export default function SettingModal({ onClose, ...rest }: SettingModalProps) {
-  const router = useRouter();
-
-  const handleGoSettingPage = () => {
-    onClose();
-    router.push("/setting");
-  };
-
+export default function BackModal({ menus, onClose, ...rest }: LeftModalProps) {
   return (
-    <Modal transparent={true} animationType="fade" {...rest}>
+    <Modal transparent={true} animationType="fade" onRequestClose={onClose} {...rest}>
       <ThemedView style={styles.backdrop}>
         <ThemedView style={styles.container}>
-          <Pressable
-            style={({ focused }) => [styles.button, focused && styles.buttonFocused]}
-            hasTVPreferredFocus={true}
-            onPress={handleGoSettingPage}
-          >
-            <ThemedText style={styles.label}>{TEXT.SETTING_BUTTON_LABEL}</ThemedText>
-          </Pressable>
-          <Pressable
-            style={({ focused }) => [styles.button, focused && styles.buttonFocused]}
-            onPress={() => BackHandler.exitApp()}
-          >
-            <ThemedText style={styles.label}>{TEXT.QUIT_BUTTON_LABEL}</ThemedText>
-          </Pressable>
+          {menus.map((menu, index) => (
+            <Pressable
+              key={menu.label}
+              style={({ focused }) => [styles.button, focused && styles.buttonFocused]}
+              onPress={() => {
+                onClose();
+                menu.onPress?.();
+              }}
+              hasTVPreferredFocus={index === 0}
+            >
+              <ThemedText style={styles.label}>{menu.label}</ThemedText>
+            </Pressable>
+          ))}
         </ThemedView>
       </ThemedView>
-
       <ThemedText style={styles.copyright}>
         {TEXT.APP_NAME} {Application.nativeApplicationVersion}
       </ThemedText>
