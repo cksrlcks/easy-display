@@ -1,4 +1,4 @@
-import { Screen, Slide } from "@shared/types";
+import { Screen, Slide } from "@repo/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 

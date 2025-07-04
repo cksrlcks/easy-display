@@ -1,5 +1,5 @@
 import { isImageFile, isVideoFile } from "@renderer/lib/utils";
-import { ScreenWithSlides } from "@shared/types";
+import { ScreenData } from "@repo/types";
 import { useEffect, useState } from "react";
 
 const DEV_URL = "http://localhost:51235";
@@ -8,7 +8,7 @@ const PROD_URL = "";
 const ROOT_URL = import.meta.env.DEV ? DEV_URL : PROD_URL;
 
 export default function Webview() {
-  const [screenData, setScreenData] = useState<ScreenWithSlides | null>(null);
+  const [screenData, setScreenData] = useState<ScreenData | null>(null);
   const searchParams = new URLSearchParams(window.location.search);
   const deviceId = searchParams.get("deviceId");
 

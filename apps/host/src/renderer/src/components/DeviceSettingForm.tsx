@@ -9,7 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@renderer/components/ui/select";
-import { Device, Screen } from "@shared/types";
+import { Screen } from "@repo/types";
+import { Device } from "@shared/types";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
