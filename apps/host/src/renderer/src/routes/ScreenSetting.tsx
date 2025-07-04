@@ -106,7 +106,13 @@ export default function ScreenSetting() {
     <Form {...form}>
       <form onSubmit={handleSubmit} className="space-y-4 flex flex-col h-full">
         <header className="flex justify-between">
-          <Button variant="ghost" size="sm" className="gap-3" onClick={() => navigate("/screen")}>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="gap-3"
+            onClick={() => navigate("/screen")}
+          >
             <ArrowLeft />
             {data?.alias} 스크린 설정
           </Button>
