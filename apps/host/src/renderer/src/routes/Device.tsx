@@ -25,8 +25,8 @@ export default function Device() {
     <div className="flex gap-4 h-full">
       <div className="w-[60%] text-center flex flex-col items-center justify-center gap-6">
         <figure className="relative">
-          <span className="absolute inline-flex aspect-square w-[80%] animate-ping rounded-full bg-black/10 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"></span>
-          <span className="absolute inline-flex aspect-square w-[80%] animate-ping rounded-full bg-black/10 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 delay-100"></span>
+          <span className="absolute inline-flex aspect-square w-[80%] animate-ping rounded-full bg-black/10 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"></span>
+          <span className="absolute inline-flex aspect-square w-[80%] animate-ping rounded-full bg-black/10 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 delay-100 pointer-events-none"></span>
 
           <img src={Monitor} alt="screen" className="z-1 relative" />
         </figure>
