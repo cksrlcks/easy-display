@@ -1,7 +1,7 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { Client, Screen, Slide } from "@repo/types";
 import { contextBridge, ipcRenderer } from "electron";
-import { Device } from "src/shared/types";
+import { Device, GlobalConfig } from "src/shared/types";
 
 const api = {
   // general
@@ -38,6 +38,10 @@ const api = {
   socketStopDiscovery: () => ipcRenderer.invoke("socket:stop-discovery"),
   socketDiscoveredDevices: (callback: (data: Client[]) => void) =>
     ipcRenderer.on("socket:discovered-devices", (_, data) => callback(data)),
+
+  // setting
+  settingGet: () => ipcRenderer.invoke("setting:get"),
+  settingUpdate: (config: Partial<GlobalConfig>) => ipcRenderer.invoke("setting:update", config),
 };
 
 if (process.contextIsolated) {

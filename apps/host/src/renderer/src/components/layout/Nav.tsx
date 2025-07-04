@@ -10,7 +10,7 @@ const MENU_ITEMS = [
 
 export default function Nav() {
   return (
-    <nav className="py-6 mb-6 border-b border-white/10">
+    <nav className="py-6 mb-6 border-b border-white/10 flex items-center justify-between">
       <ul className="flex gap-8">
         {MENU_ITEMS.map((item) => (
           <li key={item.id}>

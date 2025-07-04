@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 function Screen({ children }: PropsWithChildren) {
   return (
     <div className="overflow-hidden h-full">
-      <div className="max-w-7xl mx-auto px-8 py-6 h-full flex flex-col">{children}</div>
+      <div className="max-w-7xl mx-auto px-8 py-8 h-full flex flex-col">{children}</div>
     </div>
   );
 }

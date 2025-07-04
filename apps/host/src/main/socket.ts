@@ -58,6 +58,7 @@ function startDeviceDiscovery() {
       name: "easy-display",
       type: "host-response",
       port: state.config.mediaServerPort,
+      hostName: state.config.hostName,
       deviceId,
       screenId: deviceInfo?.screenId || null,
     } as HostMessage;

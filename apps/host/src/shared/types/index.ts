@@ -24,3 +24,9 @@ export type Device = {
   alias: string;
   screenId?: string | null;
 };
+
+export type GlobalConfig = {
+  hostName: string;
+  mediaServerPort: number;
+  udpPort: number;
+};

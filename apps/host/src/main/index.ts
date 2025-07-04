@@ -1,9 +1,10 @@
 import { electronApp, optimizer } from "@electron-toolkit/utils";
+import { GlobalConfig } from "@shared/types";
 import { BrowserWindow, Tray, app } from "electron";
 import log from "electron-log/main";
 
 import icon from "../../resources/icon.png?asset";
-import { Config, initializeConfig } from "./config";
+import { initializeConfig } from "./config";
 import "./db/client";
 import "./ipc";
 import { initializeMedia } from "./media";
@@ -16,7 +17,7 @@ export type State = {
   mainWindow: BrowserWindow | null;
   tray: Tray | null;
   isQuitting: boolean;
-  config: Config | null;
+  config: GlobalConfig | null;
   localIp: string | null;
 };
 

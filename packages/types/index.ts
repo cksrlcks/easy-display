@@ -7,6 +7,7 @@ export type Client = {
 export type Host = {
   ip: string;
   port: number;
+  hostName: string;
   lastSeen: number;
 };
 
@@ -32,7 +33,7 @@ export type ScreenData = Screen & {
   slides: Slide[];
 };
 
-export type HostMessage = Pick<Host, "port"> & {
+export type HostMessage = Pick<Host, "port" | "hostName"> & {
   name: string;
   type: string;
   deviceId: string;

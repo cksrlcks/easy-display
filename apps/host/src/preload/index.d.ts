@@ -1,6 +1,12 @@
 import { ElectronAPI } from "@electron-toolkit/preload";
 import { Screen, ScreenData, Slide } from "@repo/types";
-import { Device, ExplorerItem, IPCResponse, ScreenWithFileBasedSlides } from "src/shared/types";
+import {
+  Device,
+  ExplorerItem,
+  GlobalConfig,
+  IPCResponse,
+  ScreenWithFileBasedSlides,
+} from "src/shared/types";
 
 declare global {
   interface Window {
@@ -41,6 +47,10 @@ declare global {
       socketStartDiscovery: () => IPCResponse<void>;
       socketStopDiscovery: () => IPCResponse<void>;
       socketDiscoveredDevices: (callback: (data: Client[]) => void) => void;
+
+      // setting
+      settingGet: () => IPCResponse<GlobalConfig>;
+      settingUpdate: (config: Partial<GlobalConfig>) => IPCResponse<void>;
     };
   }
 }
