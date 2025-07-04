@@ -1,7 +1,7 @@
 import { useDeviceStore } from "@/stores/useDeviceStore";
 import { useHostIpStore } from "@/stores/useHostStore";
 import { ScreenData, Slide } from "@repo/types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function useScreenData() {
   const [error, setError] = useState<string | null>(null);
@@ -11,11 +11,7 @@ export default function useScreenData() {
   const hostIp = useHostIpStore((state) => state.hostIp);
   const deviceId = useDeviceStore((state) => state.deviceId);
 
-  useEffect(() => {
-    getScreenData();
-  }, [hostIp, deviceId]);
-
-  async function getScreenData() {
+  const getScreenData = useCallback(async () => {
     if (!hostIp || !deviceId) return;
 
     try {
@@ -33,7 +29,11 @@ export default function useScreenData() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [hostIp, deviceId]);
+
+  useEffect(() => {
+    getScreenData();
+  }, [hostIp, deviceId, getScreenData]);
 
   const slides = data?.slides.filter((slide: Slide) => slide.show) || [];
 

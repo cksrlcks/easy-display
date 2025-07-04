@@ -1,7 +1,5 @@
 import { Pressable, PressableProps, StyleSheet } from "react-native";
 
-import { ThemedText } from "./ThemedText";
-
 type ThemedButtonProps = PressableProps & {
   type?: "primary" | "secondary";
   size?: "small" | "normal";

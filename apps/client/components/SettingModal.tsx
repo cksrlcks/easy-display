@@ -1,8 +1,7 @@
 import { TEXT } from "@/constants/Text";
 import * as Application from "expo-application";
 import { useRouter } from "expo-router";
-import { BackHandler, Modal, ModalProps, Pressable, View } from "react-native";
-import { StyleSheet } from "react-native";
+import { BackHandler, Modal, ModalProps, Pressable, StyleSheet } from "react-native";
 
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";

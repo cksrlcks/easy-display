@@ -41,6 +41,7 @@ export default function RootLayout() {
       const config = await loadAppConfig();
       setConfig(config);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!loaded && !error) {

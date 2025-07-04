@@ -43,6 +43,7 @@ export default function useHostDiscovery() {
         setDeviceId(newId);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useFocusEffect(
@@ -52,6 +53,7 @@ export default function useHostDiscovery() {
       setupListener();
 
       return () => cleanup();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [deviceId]),
   );
 
@@ -166,7 +168,7 @@ export default function useHostDiscovery() {
     }, discoveryTimeout);
 
     return () => clearTimeout(timeout);
-  }, [status, hostList]);
+  }, [status, hostList, discoveryTimeout]);
 
   return {
     hostList,

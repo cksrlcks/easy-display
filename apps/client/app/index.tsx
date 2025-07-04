@@ -5,8 +5,7 @@ import SettingModal from "@/components/SettingModal";
 import { GUIDE_URL } from "@/constants/Config";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { BackHandler, View } from "react-native";
-import { StyleSheet } from "react-native";
+import { BackHandler, StyleSheet, View } from "react-native";
 
 export default function Home() {
   const [visible, setVisible] = useState(false);
@@ -14,11 +13,7 @@ export default function Home() {
   useFocusEffect(
     useCallback(() => {
       const subscription = BackHandler.addEventListener("hardwareBackPress", () => {
-        if (visible) {
-          setVisible(false);
-        } else {
-          setVisible(true);
-        }
+        setVisible((prev) => !prev);
 
         return true;
       });

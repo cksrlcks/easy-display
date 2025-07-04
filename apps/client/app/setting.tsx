@@ -7,7 +7,7 @@ import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Modal, ScrollView, StyleSheet, TextInput } from "react-native";
+import { Alert, Modal, ScrollView, StyleSheet } from "react-native";
 
 type AppSettingForm = {
   discoveryPort: string;
