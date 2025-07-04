@@ -20,4 +20,6 @@ export const TEXT = {
   SETTING_SAVE: "저장",
   SETTING_ALERT_TITLE: "설정 변경",
   SETTING_SAVE_SUCCESS: "설정이 저장되었습니다.",
+  NOT_FOUND: "이 화면은 존재하지 않습니다.",
+  NOT_FOUND_GO_HOME: "홈 화면으로 가기",
 };
