@@ -12,6 +12,7 @@ export const SEND_MESSAGE_TYPE = "discovery-ping";
 export const DISCOVERY_TIMEOUT = 5000;
 export const DISCOVERY_INTERVAL = 3000;
 export const SLIDE_TRANSITION_SPEED = 500;
+export const SLIDE_LOADING_TIMEOUT = 5000;
 
 export async function loadAppConfig() {
   const [discoveryPort, discoveryTimeout, slideTransitionSpeed] = await Promise.all([

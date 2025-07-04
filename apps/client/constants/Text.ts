@@ -13,6 +13,7 @@ export const TEXT = {
   SLIDESHOW_NO_IMAGE: "이미지 파일이 없습니다.",
   SLIDESHOW_NO_VIDEO: "비디오 파일이 없습니다.",
   SLIDESHOW_NOT_SUPPORTED: "지원하지 않는 슬라이드 유형입니다.",
+  SLIDESHOW_LOADING: "슬라이드 데이터를 가져오는중입니다.",
   SETTING_HOST_PORT: "HOST 통신 포트",
   SETTING_HOST_DISCOVERY_TIMEOUT: "HOST 탐색 시간(초)",
   SETTING_SLIDE_TRANSITION_SPEED: "슬라이드 화면전환 속도(밀리초)",

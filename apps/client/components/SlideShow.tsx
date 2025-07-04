@@ -1,3 +1,4 @@
+import { SLIDE_LOADING_TIMEOUT } from "@/constants/Config";
 import { TEXT } from "@/constants/Text";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import { useHostIpStore } from "@/stores/useHostStore";
@@ -5,7 +6,7 @@ import { Slide } from "@repo/types";
 import { useEventListener } from "expo";
 import { VideoView, useVideoPlayer } from "expo-video";
 import { useEffect, useState } from "react";
-import { Dimensions, Image, View } from "react-native";
+import { ActivityIndicator, Dimensions, Image, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import { ThemedText } from "./ThemedText";
@@ -18,6 +19,7 @@ type SlideShowProps = {
 const { width, height } = Dimensions.get("window");
 
 export default function SlideShow({ slides }: SlideShowProps) {
+  const [isReady, setIsReady] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentSlide = slides[currentIndex];
 
@@ -45,26 +47,48 @@ export default function SlideShow({ slides }: SlideShowProps) {
     }
   };
 
+  useEffect(() => {
+    const imgUriMaps = slides
+      .filter((slide) => slide.type === "image" && slide.filePath !== null)
+      .map(
+        (slide) =>
+          `http://${useHostIpStore.getState().hostIp}/media?path=${encodeURIComponent(slide.filePath!)}`,
+      );
+
+    const prefetch = Promise.all(
+      imgUriMaps.map((uri) =>
+        Image.prefetch(uri)
+          .then(() => true)
+          .catch(() => false),
+      ),
+    );
+    const timeout = new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(null);
+      }, SLIDE_LOADING_TIMEOUT);
+    });
+
+    Promise.race([prefetch, timeout]).finally(() => {
+      setIsReady(true);
+    });
+  }, [slides]);
+
   return (
     <View>
       <ThemedView>
-        <Animated.View entering={entering} exiting={exiting} key={currentSlide.id}>
-          {slideContent(currentSlide.type)}
-        </Animated.View>
+        {isReady ? (
+          <Animated.View entering={entering} exiting={exiting} key={currentSlide.id}>
+            {slideContent(currentSlide.type)}
+          </Animated.View>
+        ) : (
+          <Loading />
+        )}
       </ThemedView>
     </View>
   );
 }
 
-const ImgSlide = ({
-  slide,
-  onNext,
-  direction = "horizontal",
-}: {
-  slide: Slide;
-  onNext: () => void;
-  direction?: "horizontal" | "vertical";
-}) => {
+const ImgSlide = ({ slide, onNext }: { slide: Slide; onNext: () => void }) => {
   const hostIp = useHostIpStore((state) => state.hostIp);
 
   useEffect(() => {
@@ -72,7 +96,7 @@ const ImgSlide = ({
       const timer = setTimeout(onNext, slide.duration * 1000);
       return () => clearTimeout(timer);
     }
-  }, [slide.duration]);
+  }, [slide.duration, onNext]);
 
   if (slide.filePath === null) {
     return (
@@ -108,14 +132,7 @@ const ImgSlide = ({
   );
 };
 
-const VideoSlide = ({
-  slide,
-  onNext,
-}: {
-  slide: Slide;
-  onNext: () => void;
-  direction?: "horizontal" | "vertical";
-}) => {
+const VideoSlide = ({ slide, onNext }: { slide: Slide; onNext: () => void }) => {
   const hostIp = useHostIpStore((state) => state.hostIp);
   const videoUri = slide.filePath
     ? `http://${hostIp}/media?path=${encodeURIComponent(slide.filePath)}`
@@ -137,7 +154,7 @@ const VideoSlide = ({
       const timer = setTimeout(onNext, slide.duration * 1000);
       return () => clearTimeout(timer);
     }
-  }, [slide.duration]);
+  }, [slide.duration, onNext]);
 
   if (slide.filePath === null) {
     return (
@@ -172,7 +189,7 @@ const NotSupportedExtSlide = ({ onNext }: { onNext: () => void }) => {
   useEffect(() => {
     const timer = setTimeout(onNext, 5000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [onNext]);
 
   return (
     <ThemedView
@@ -184,6 +201,15 @@ const NotSupportedExtSlide = ({ onNext }: { onNext: () => void }) => {
       }}
     >
       <ThemedText>{TEXT.SLIDESHOW_NOT_SUPPORTED}</ThemedText>
+    </ThemedView>
+  );
+};
+
+const Loading = () => {
+  return (
+    <ThemedView style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 20 }}>
+      <ActivityIndicator size="large" color="#fff" />
+      <ThemedText>{TEXT.SLIDESHOW_LOADING}</ThemedText>
     </ThemedView>
   );
 };
