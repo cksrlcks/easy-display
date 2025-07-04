@@ -2,11 +2,11 @@ import { createHashRouter } from "react-router";
 
 import App from "./App";
 import Error from "./components/Error";
+import Connect from "./routes/Connect";
 import Device from "./routes/Device";
 import Media from "./routes/Media";
 import Screen from "./routes/Screen";
 import ScreenSetting from "./routes/ScreenSetting";
-import Setting from "./routes/Setting";
 
 export const router = createHashRouter([
   {
@@ -36,8 +36,8 @@ export const router = createHashRouter([
         element: <Device />,
       },
       {
-        path: "setting",
-        element: <Setting />,
+        path: "connect",
+        element: <Connect />,
       },
     ],
   },

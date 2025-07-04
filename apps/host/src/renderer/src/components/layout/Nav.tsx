@@ -5,7 +5,7 @@ const MENU_ITEMS = [
   { id: "media", path: "/", label: "미디어 관리" },
   { id: "screen", path: "/screen", label: "스크린 관리" },
   { id: "device", path: "/device", label: "디스플레이 관리" },
-  { id: "settings", path: "/setting", label: "연결 관리" },
+  { id: "connect", path: "/connect", label: "연결 관리" },
 ];
 
 export default function Nav() {

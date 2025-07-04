@@ -6,9 +6,10 @@ import { Button } from "@renderer/components/ui/button";
 import { Input } from "@renderer/components/ui/input";
 import { useDeviceActions, useDevices } from "@renderer/hooks/useDevice";
 import { useScreens } from "@renderer/hooks/useScreens";
-import { Device, Screen as ScreenType } from "@shared/types";
+import { Screen as ScreenType } from "@repo/types";
+import { Device } from "@shared/types";
 
-export default function Setting() {
+export default function Connect() {
   const { data: devices, isPending: isPendingDevices } = useDevices();
   const { data: screens, isPending: isPendingScreens } = useScreens();
   const { onEditDevice, onDeleteDevice } = useDeviceActions();
