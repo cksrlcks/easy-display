@@ -98,7 +98,10 @@ export default function useHostDiscovery() {
           );
         }
 
-        return [...filtered, { ip: rinfo.address, port: data.port, lastSeen: now }];
+        return [
+          ...filtered,
+          { ip: rinfo.address, port: data.port, hostName: data.hostName, lastSeen: now },
+        ];
       });
     });
 
