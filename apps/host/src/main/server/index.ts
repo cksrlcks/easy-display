@@ -1,4 +1,3 @@
-import { is } from "@electron-toolkit/utils";
 import cors from "cors";
 import { eq } from "drizzle-orm";
 import express from "express";
@@ -9,12 +8,6 @@ import { state } from "..";
 import { MEDIA_FOLDER } from "../constants";
 import { db } from "../db/client";
 import { devices, screens } from "../db/schema";
-
-/**
- * 외부 display용 서버 (tv app의 webview에서 바라볼 서버)
- */
-
-export let mediaServerUrl: string | null = null;
 
 export function startServer() {
   const app = express();
@@ -27,18 +20,6 @@ export function startServer() {
       if (iface.family === "IPv4" && !iface.internal) state.localIp = iface.address;
     }
   }
-
-  mediaServerUrl = `http://${state.localIp}:${state.config?.mediaServerPort || 3000}`;
-
-  app.get("/screen", (req, res) => {
-    const deviceId = req.query.deviceId as string;
-
-    if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-      res.redirect(process.env["ELECTRON_RENDERER_URL"] + "/screen?deviceId=" + deviceId);
-    } else {
-      res.sendFile(path.join(__dirname, "../renderer/screen.html"));
-    }
-  });
 
   app.get("/get-screen-data", async (req, res) => {
     const deviceId = req.query.deviceId as string;
