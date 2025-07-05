@@ -19,7 +19,7 @@
       [
         "@react-native-tvos/config-tv",
         {
-          "androidTVBanner": "./assets/tv_icons/icon-400x240.png",
+          "androidTVBanner": "./assets/tv_icons/icon-320x180.png",
           "androidTVIcon": "./assets/images/icon.png",
           "appleTVImages": {
             "icon": "./assets/tv_icons/icon-1280x768.png",
