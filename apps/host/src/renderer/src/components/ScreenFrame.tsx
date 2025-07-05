@@ -9,7 +9,7 @@ export default function ScreenFrame({ className, children }: ScreenFrameProps) {
   return (
     <div
       className={cn(
-        "aspect-[16/10] w-full max-w-[300px] rounded-sm flex items-center justify-center text-white shadow-xl",
+        "aspect-[16/10] w-full max-w-[300px] rounded-sm flex items-center justify-center text-white shadow-xl overflow-hidden",
         className,
       )}
     >
