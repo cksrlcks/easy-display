@@ -1,16 +1,13 @@
+import CustomSplashScreen from "@/components/SplashScreen";
 import { loadAppConfig } from "@/constants/Config";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ReanimatedLogLevel, configureReanimatedLogger } from "react-native-reanimated";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.setOptions({
-  duration: 2000,
-});
 SplashScreen.preventAutoHideAsync();
 
 // Disable reanimated warnings
@@ -20,32 +17,46 @@ configureReanimatedLogger({
 });
 
 export default function RootLayout() {
+  const [isAppReady, setIsAppReady] = useState(false);
+  const [showCustomSplash, setShowCustomSplash] = useState(true);
+
   const [loaded, error] = useFonts({
     PretendardRegular: require("../assets/fonts/Pretendard-Regular.ttf"),
     PretendardMedium: require("../assets/fonts/Pretendard-Medium.ttf"),
     PretendardBold: require("../assets/fonts/Pretendard-Bold.ttf"),
   });
+
   const setConfig = useAppConfigStore((state) => state.setConfig);
 
   useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-      if (error) {
-        console.warn(`Error in loading fonts: ${error}`);
-      }
-    }
-  }, [loaded, error]);
+    (async function prepare() {
+      try {
+        if (!loaded && !error) {
+          return;
+        }
 
-  useEffect(() => {
-    (async function () {
-      const config = await loadAppConfig();
-      setConfig(config);
+        const config = await loadAppConfig();
+        setConfig(config);
+
+        // 에러 처리
+        if (error) {
+          console.warn(`Error in loading fonts: ${error}`);
+        }
+
+        setIsAppReady(true);
+      } catch (e) {
+        console.warn("App initialization error:", e);
+        setIsAppReady(true);
+      }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loaded, error, setConfig]);
 
   if (!loaded && !error) {
     return null;
+  }
+
+  if (showCustomSplash || !isAppReady) {
+    return <CustomSplashScreen onFinish={() => setShowCustomSplash(false)} />;
   }
 
   return (
