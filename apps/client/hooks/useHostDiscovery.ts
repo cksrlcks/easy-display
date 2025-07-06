@@ -73,6 +73,11 @@ export default function useHostDiscovery() {
           );
         }
 
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+          timeoutRef.current = null;
+        }
+
         return [
           ...prev,
           { ip: rinfo.address, port: data.port, hostName: data.hostName, lastSeen: now },
@@ -102,11 +107,23 @@ export default function useHostDiscovery() {
     useCallback(() => {
       const timeout = setInterval(() => {
         const now = Date.now();
-        setHostList((prev) => prev.filter((host) => now - host.lastSeen < DISCOVERY_INTERVAL));
+        setHostList((prev) => {
+          const filtered = prev.filter((host) => now - host.lastSeen < DISCOVERY_INTERVAL);
+          if (filtered.length === 0 && status === "pending") {
+            if (!timeoutRef.current) {
+              timeoutRef.current = setTimeout(() => {
+                setStatus("idle");
+                cleanup();
+              }, discoveryTimeout);
+            }
+          }
+
+          return filtered;
+        });
       }, DISCOVERY_INTERVAL);
 
       return () => clearInterval(timeout);
-    }, []),
+    }, [cleanup, discoveryTimeout, status]),
   );
 
   return {
