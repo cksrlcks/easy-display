@@ -34,6 +34,9 @@ const styles = StyleSheet.create({
     borderRadius: 9999,
     borderWidth: 2,
     borderStyle: "solid",
+    transitionProperty: "transform",
+    transitionDuration: "0.2s",
+    transitionTimingFunction: "ease-in-out",
   },
   small: {
     paddingHorizontal: 12,
@@ -57,6 +60,7 @@ const styles = StyleSheet.create({
   focused: {
     borderColor: "#fff",
     boxShadow: "0 0 60px rgb(0, 0, 0)",
+    transform: [{ scale: 1.05 }],
   },
   focusedPrimary: {
     backgroundColor: "#007AFF",

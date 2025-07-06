@@ -62,11 +62,13 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 20,
     alignItems: "flex-start",
+    opacity: 0.4,
   },
   buttonFocused: {
     backgroundColor: "#000",
     boxShadow: "0 0 20px rgba(0, 0, 0, 0.5)",
     paddingLeft: 24,
+    opacity: 1,
   },
   copyright: {
     position: "absolute",

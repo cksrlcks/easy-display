@@ -24,7 +24,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.introContainer}>
+      <View style={styles.left}>
         <Intro />
         <GuideQR value={GUIDE_URL} />
       </View>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#000",
   },
-  introContainer: {
+  left: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
