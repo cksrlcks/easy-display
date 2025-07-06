@@ -5,9 +5,9 @@ import { ThemedView } from "@/components/ThemedView";
 import { TEXT } from "@/constants/Text";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { Alert, Modal, ScrollView, StyleSheet } from "react-native";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import { Alert, BackHandler, ScrollView, StyleSheet } from "react-native";
 
 type AppSettingForm = {
   discoveryPort: string;
@@ -39,17 +39,24 @@ const validateForm = (form: AppSettingForm) => {
 export default function Setting() {
   const { discoveryPort, discoveryTimeout, slideTransitionSpeed } = useAppConfigStore();
   const setAppConfig = useAppConfigStore((state) => state.setConfig);
-  const [visible, setVisible] = useState(false);
+
   const [error, setError] = useState<Partial<AppSettingForm>>({
     discoveryPort: "",
     discoveryTimeout: "",
     slideTransitionSpeed: "",
   });
+
   const [form, setForm] = useState<AppSettingForm>({
     discoveryPort: discoveryPort.toString(),
     discoveryTimeout: (discoveryTimeout / 1000).toString(),
     slideTransitionSpeed: slideTransitionSpeed.toString(),
   });
+
+  const isDirty =
+    form.discoveryPort !== discoveryPort.toString() ||
+    form.discoveryTimeout !== (discoveryTimeout / 1000).toString() ||
+    form.slideTransitionSpeed !== slideTransitionSpeed.toString();
+
   const router = useRouter();
 
   const handleSave = () => {
@@ -73,39 +80,64 @@ export default function Setting() {
     router.back();
   };
 
-  const handleBack = () => {
-    setVisible(false);
-    router.back();
-  };
+  useFocusEffect(
+    useCallback(() => {
+      const subscription = BackHandler.addEventListener("hardwareBackPress", () => {
+        if (!isDirty) {
+          router.back();
+          return true;
+        }
 
-  useEffect(() => {
-    setTimeout(() => {
-      setVisible(true);
-    }, 500);
-  }, []);
+        Alert.alert(TEXT.SETTING_EXIT_TITLE, TEXT.SETTING_EXIT_MESSAGE, [
+          {
+            text: TEXT.SETTING_EXIT_CANCEL,
+            style: "cancel",
+          },
+          {
+            text: TEXT.SETTING_EXIT_CONFIRM,
+            onPress: () => router.back(),
+            style: "destructive",
+          },
+        ]);
+
+        return true;
+      });
+
+      return () => subscription.remove();
+    }, [router, isDirty]),
+  );
 
   return (
-    <Modal visible={visible} onRequestClose={handleBack} transparent={true} animationType="fade">
-      <ScrollView style={styles.container}>
-        <ThemedView style={styles.inner}>
+    <ThemedView style={styles.container}>
+      <ThemedView style={styles.left}>
+        <ThemedText style={{ fontSize: 24, color: "#fff", marginBottom: 20 }}>
+          {TEXT.SETTING_TITLE}
+        </ThemedText>
+        <ThemedText style={{ color: "#aaa" }}>{TEXT.SETTING_DESCRIPTION}</ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.sidebar}>
+        <ScrollView style={styles.scrollContainer}>
           <ThemedView>
             <Input
               label={TEXT.SETTING_HOST_PORT}
               value={form.discoveryPort}
               onChange={(text) => setForm({ ...form, discoveryPort: text })}
               error={error.discoveryPort}
+              keyboardType="number-pad"
             />
             <Input
               label={TEXT.SETTING_HOST_DISCOVERY_TIMEOUT}
               value={form.discoveryTimeout}
               onChange={(text) => setForm({ ...form, discoveryTimeout: text })}
               error={error.discoveryTimeout}
+              keyboardType="number-pad"
             />
             <Input
               label={TEXT.SETTING_SLIDE_TRANSITION_SPEED}
               value={form.slideTransitionSpeed}
               onChange={(text) => setForm({ ...form, slideTransitionSpeed: text })}
               error={error.slideTransitionSpeed}
+              keyboardType="number-pad"
             />
           </ThemedView>
           <ThemedView style={styles.buttonContainer}>
@@ -113,23 +145,32 @@ export default function Setting() {
               <ThemedText>{TEXT.SETTING_SAVE}</ThemedText>
             </ThemedButton>
           </ThemedView>
-        </ThemedView>
-      </ScrollView>
-    </Modal>
+        </ScrollView>
+      </ThemedView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111",
-    padding: 80,
+    flexDirection: "row",
+    backgroundColor: "#000",
   },
-  inner: {
-    maxWidth: 400,
+  left: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sidebar: {
+    width: 320,
+    backgroundColor: "#111",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  scrollContainer: {
     width: "100%",
-    margin: "auto",
-    paddingBottom: 100,
+    padding: 40,
   },
   buttonContainer: {
     alignItems: "flex-end",
