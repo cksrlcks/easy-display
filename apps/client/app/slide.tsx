@@ -40,7 +40,10 @@ export default function Slide() {
           </ThemedView>
         )}
         {error && (
-          <ThemedView style={styles.errorContainer}>
+          <ThemedView
+            style={styles.errorContainer}
+            importantForAccessibility={visible ? "no-hide-descendants" : "auto"}
+          >
             <ErrorIcon style={{ opacity: 0.5 }} width={80} height={80} />
             <ThemedText style={styles.errorText}>{error}</ThemedText>
             <ThemedButton onPress={getScreenData} disabled={isLoading}>
