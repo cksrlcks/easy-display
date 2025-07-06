@@ -1,60 +1,38 @@
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
-import { Animated, Dimensions, Image, StyleSheet, View } from "react-native";
+import { useEffect } from "react";
+import { Dimensions, Image, StyleSheet, View } from "react-native";
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 const { width, height } = Dimensions.get("window");
 
 export default function CustomSplashScreen({ onFinish }: { onFinish: () => void }) {
-  const [fadeAnim] = useState(new Animated.Value(0));
-  const [scaleAnim] = useState(new Animated.Value(0.8));
+  const opacity = useSharedValue(0);
+  const scale = useSharedValue(0.8);
 
   useEffect(() => {
-    SplashScreen.hideAsync();
+    opacity.value = withTiming(1, { duration: 800 });
+    scale.value = withTiming(1, { duration: 800 });
 
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    const timer = setTimeout(() => {
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim, {
-          toValue: 1.1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-      ]).start(() => {
-        onFinish();
+    setTimeout(() => {
+      opacity.value = withTiming(0, { duration: 500 });
+      scale.value = withTiming(1.1, { duration: 500 }, () => {
+        runOnJS(onFinish)();
       });
     }, 2500);
+  }, [opacity, scale, onFinish]);
 
-    return () => clearTimeout(timer);
-  }, [fadeAnim, scaleAnim, onFinish]);
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
     <View style={styles.splashContainer}>
-      <Animated.View
-        style={[
-          styles.splashContent,
-          {
-            opacity: fadeAnim,
-            transform: [{ scale: scaleAnim }],
-          },
-        ]}
-      >
+      <Animated.View style={[styles.splashContent, animatedStyle]}>
         <Image
           source={require("../assets/images/splash-image.png")}
           style={styles.splashImage}

@@ -20,8 +20,7 @@ configureReanimatedLogger({
 });
 
 export default function RootLayout() {
-  const [isAppReady, setIsAppReady] = useState(false);
-  const [showCustomSplash, setShowCustomSplash] = useState(isAndroid12OrAbove);
+  const [showCustomSplash, setShowCustomSplash] = useState(true);
 
   const [loaded, error] = useFonts({
     PretendardRegular: require("../assets/fonts/Pretendard-Regular.ttf"),
@@ -32,6 +31,10 @@ export default function RootLayout() {
   const setConfig = useAppConfigStore((state) => state.setConfig);
 
   useEffect(() => {
+    if (isAndroid12OrAbove) {
+      SplashScreen.hideAsync();
+    }
+
     (async function prepare() {
       try {
         if (!loaded && !error) {
@@ -41,19 +44,15 @@ export default function RootLayout() {
         const config = await loadAppConfig();
         setConfig(config);
 
-        // 에러 처리
         if (error) {
           console.warn(`Error in loading fonts: ${error}`);
         }
-
-        setIsAppReady(true);
 
         if (!isAndroid12OrAbove) {
           SplashScreen.hideAsync();
         }
       } catch (e) {
         console.warn("App initialization error:", e);
-        setIsAppReady(true);
       }
     })();
   }, [loaded, error, setConfig]);
@@ -62,8 +61,14 @@ export default function RootLayout() {
     return null;
   }
 
-  if (showCustomSplash || !isAppReady) {
-    return <CustomSplashScreen onFinish={() => setShowCustomSplash(false)} />;
+  if (isAndroid12OrAbove && showCustomSplash) {
+    return (
+      <CustomSplashScreen
+        onFinish={() => {
+          setShowCustomSplash(false);
+        }}
+      />
+    );
   }
 
   return (
