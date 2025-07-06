@@ -26,6 +26,7 @@ export const TEXT = {
   SETTING_EXIT_MESSAGE: "변경사항이 저장되지 않았습니다. 정말로 나가시겠습니까?",
   SETTING_EXIT_CANCEL: "취소",
   SETTING_EXIT_CONFIRM: "나가기",
+  SETTING_SUCCESS_CONFIRM: "확인",
   NOT_FOUND: "이 화면은 존재하지 않습니다.",
   NOT_FOUND_GO_HOME: "홈 화면으로 가기",
 };
