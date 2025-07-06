@@ -53,7 +53,7 @@
         "backgroundColor": "#000000"
       },
       "icon": "./assets/images/adaptive-icon.png",
-      "package": "com.anonymous.easydisplayclient",
+      "package": "com.heavybear.easydisplayclient",
       "targetSdkVersion": 34,
       "minSdkVersion": 21,
       "permissions": ["POST_NOTIFICATIONS"],
