@@ -14,13 +14,15 @@
       "ios": {
         "buildConfiguration": "Debug",
         "simulator": true
-      }
+      },
+      "pnpm": "10.10.0"
     },
     "development_tv": {
       "extends": "development",
       "env": {
         "EXPO_TV": "1"
-      }
+      },
+      "pnpm": "10.10.0"
     },
     "preview": {
       "extends": "production",
@@ -31,20 +33,23 @@
       "android": {
         "buildType": "apk",
         "withoutCredentials": true
-      }
+      },
+      "pnpm": "10.10.0"
     },
     "preview_tv": {
       "extends": "preview",
       "env": {
         "EXPO_TV": "1"
-      }
+      },
+      "pnpm": "10.10.0"
     },
     "production": {},
     "production_tv": {
       "extends": "production",
       "env": {
         "EXPO_TV": "1"
-      }
+      },
+      "pnpm": "10.10.0"
     }
   },
   "submit": {
