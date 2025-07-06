@@ -31,7 +31,7 @@ export const state: State = {
 
 log.initialize();
 
-log.info("Log from the main process");
+Object.assign(console, log.functions);
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
