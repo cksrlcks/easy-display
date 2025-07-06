@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   focused: {
     borderColor: "#fff",
     boxShadow: "0 0 30px rgba(0, 0, 0, 0.2)",
+    transform: [{ scale: 1.02 }],
   },
   label: {
     gap: 4,
