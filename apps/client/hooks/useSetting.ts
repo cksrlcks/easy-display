@@ -65,7 +65,10 @@ export default function useSetting() {
 
     return Promise.all([
       AsyncStorage.setItem("discovery-port", form.discoveryPort),
-      AsyncStorage.setItem("discovery-timeout", form.discoveryTimeout),
+      AsyncStorage.setItem(
+        "discovery-timeout",
+        (parseInt(form.discoveryTimeout, 10) * 1000).toString(),
+      ),
       AsyncStorage.setItem("slide-transition-speed", form.slideTransitionSpeed),
     ]);
   };
