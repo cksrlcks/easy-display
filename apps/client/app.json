@@ -1,7 +1,7 @@
 {
   "expo": {
     "icon": "./assets/images/icon.png",
-    "scheme": "routertv",
+    "scheme": "easy-display-client",
     "splash": {
       "image": "./assets/images/splash-image.png",
       "resizeMode": "contain",
