@@ -11,7 +11,8 @@
     "reset-project": "./scripts/reset-project.js",
     "lint": "expo lint",
     "prebuild": "EXPO_TV=1 expo prebuild --platform android --clean",
-    "deploy": "npx expo export -p web && npx eas-cli@latest deploy"
+    "deploy": "npx expo export -p web && npx eas-cli@latest deploy",
+    "build:android": "pnpm run prebuild && cd android && ./gradlew build"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
