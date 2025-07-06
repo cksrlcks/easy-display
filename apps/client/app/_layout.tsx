@@ -1,5 +1,6 @@
 import CustomSplashScreen from "@/components/SplashScreen";
 import { loadAppConfig } from "@/constants/Config";
+import useBroadcastPresence from "@/hooks/useBroadcastPresence";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import * as Device from "expo-device";
@@ -29,6 +30,8 @@ export default function RootLayout() {
   });
 
   const setConfig = useAppConfigStore((state) => state.setConfig);
+
+  useBroadcastPresence();
 
   useEffect(() => {
     if (isAndroid12OrAbove) {

@@ -31,28 +31,38 @@ export default function Slide() {
     },
   ];
 
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <ThemedView style={styles.loadingContainer}>
+          <ThemedText style={styles.loadingText}>화면 데이터 로딩 중...</ThemedText>
+        </ThemedView>
+      );
+    }
+
+    if (error) {
+      return (
+        <ThemedView
+          style={styles.errorContainer}
+          importantForAccessibility={visible ? "no-hide-descendants" : "auto"}
+        >
+          <ErrorIcon style={{ opacity: 0.5 }} width={80} height={80} />
+          <ThemedText style={styles.errorText}>{error}</ThemedText>
+          <ThemedButton onPress={getScreenData} disabled={isLoading}>
+            <ThemedText>재시도</ThemedText>
+          </ThemedButton>
+        </ThemedView>
+      );
+    }
+
+    if (slides.length > 0) {
+      return <SlideShow slides={slides} />;
+    }
+  };
+
   return (
     <>
-      <ThemedView style={styles.container}>
-        {isLoading && (
-          <ThemedView style={styles.loadingContainer}>
-            <ThemedText style={styles.loadingText}>화면 데이터 로딩 중...</ThemedText>
-          </ThemedView>
-        )}
-        {error && (
-          <ThemedView
-            style={styles.errorContainer}
-            importantForAccessibility={visible ? "no-hide-descendants" : "auto"}
-          >
-            <ErrorIcon style={{ opacity: 0.5 }} width={80} height={80} />
-            <ThemedText style={styles.errorText}>{error}</ThemedText>
-            <ThemedButton onPress={getScreenData} disabled={isLoading}>
-              <ThemedText>재시도</ThemedText>
-            </ThemedButton>
-          </ThemedView>
-        )}
-        {slides.length > 0 && <SlideShow slides={slides} />}
-      </ThemedView>
+      <ThemedView style={styles.container}>{renderContent()}</ThemedView>
       <BackModal visible={visible} onClose={onClose} menus={backModalMenus} />
     </>
   );

@@ -2,6 +2,7 @@ import { DISCOVERY_PORT, DISCOVERY_TIMEOUT, SLIDE_TRANSITION_SPEED } from "@/con
 import { create } from "zustand";
 
 type AppConfig = {
+  deviceId: string;
   discoveryPort: number;
   discoveryTimeout: number;
   slideTransitionSpeed: number;
@@ -9,6 +10,7 @@ type AppConfig = {
 };
 
 export const useAppConfigStore = create<AppConfig>((set) => ({
+  deviceId: "",
   discoveryPort: DISCOVERY_PORT,
   discoveryTimeout: DISCOVERY_TIMEOUT,
   slideTransitionSpeed: SLIDE_TRANSITION_SPEED,

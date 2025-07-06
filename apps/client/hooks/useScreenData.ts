@@ -1,4 +1,4 @@
-import { useDeviceStore } from "@/stores/useDeviceStore";
+import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import { useHostIpStore } from "@/stores/useHostStore";
 import { ScreenData, Slide } from "@repo/types";
 import { useCallback, useEffect, useState } from "react";
@@ -9,7 +9,7 @@ export default function useScreenData() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const hostIp = useHostIpStore((state) => state.hostIp);
-  const deviceId = useDeviceStore((state) => state.deviceId);
+  const deviceId = useAppConfigStore((state) => state.deviceId);
 
   const getScreenData = useCallback(async () => {
     if (!hostIp || !deviceId) return;

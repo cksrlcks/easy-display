@@ -17,7 +17,6 @@ export default function Discovery() {
   const handleHostItemPress = (hostIp: string) => {
     setHostIp(hostIp);
     cleanup();
-
     router.push("/slide");
   };
 
