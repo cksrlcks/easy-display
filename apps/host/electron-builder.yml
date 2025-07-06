@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: "easy-display"
+appId: com.easydisplay.host
+productName: "easy-display-host"
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: "easy-display"
+  executableName: "easy-display-host"
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
