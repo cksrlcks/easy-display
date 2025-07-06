@@ -7,6 +7,7 @@ import {
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import { useDiscoverySocketStore } from "@/stores/useSocketStore";
 import { ClientMessage } from "@repo/types";
+import { Buffer } from "buffer";
 import * as Device from "expo-device";
 import { useEffect } from "react";
 import dgram from "react-native-udp";

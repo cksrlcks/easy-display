@@ -6,13 +6,14 @@ import {
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import { useDiscoverySocketStore } from "@/stores/useSocketStore";
 import { Host, HostMessage } from "@repo/types";
+import { Buffer } from "buffer";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 
 export default function useHostDiscovery() {
   const [hostList, setHostList] = useState<Host[]>([]);
   const [status, setStatus] = useState<"idle" | "pending" | "error" | null>(null);
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { socket } = useDiscoverySocketStore();
   const { discoveryTimeout, deviceId } = useAppConfigStore();

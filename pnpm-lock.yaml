@@ -47,6 +47,9 @@ importers:
       '@types/react-native':
         specifier: ^0.72.8
         version: 0.72.8(react-native-tvos@0.79.2-0)
+      buffer:
+        specifier: ^6.0.3
+        version: 6.0.3
       expo:
         specifier: ^53.0.4
         version: 53.0.17(@babel/core@7.28.0)(@expo/metro-runtime@5.0.4(react-native-tvos@0.79.2-0))(react-native-tvos@0.79.2-0)(react@19.0.0)
@@ -3174,6 +3177,9 @@ packages:
 
   buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
+
+  buffer@6.0.3:
+    resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
 
   builder-util-runtime@9.2.10:
     resolution: {integrity: sha512-6p/gfG1RJSQeIbz8TK5aPNkoztgY1q5TgmGFMAXcY8itsGW6Y2ld1ALsZ5UJn8rog7hKF3zHx5iQbNQ8uLcRlw==}
@@ -10480,6 +10486,11 @@ snapshots:
   buffer-from@1.1.2: {}
 
   buffer@5.7.1:
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
+
+  buffer@6.0.3:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
