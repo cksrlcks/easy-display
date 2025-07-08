@@ -5,9 +5,8 @@ import { useHostIpStore } from "@/stores/useHostStore";
 import { Slide } from "@repo/types";
 import { useEventListener } from "expo";
 import { VideoView, useVideoPlayer } from "expo-video";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, Image, View } from "react-native";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Animated, Dimensions, Image, View } from "react-native";
 
 import { ThemedText } from "./ThemedText";
 import { ThemedView } from "./ThemedView";
@@ -23,14 +22,25 @@ export default function SlideShow({ slides }: SlideShowProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentSlide = slides[currentIndex];
 
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideTransitionSpeed = useAppConfigStore((state) => state.slideTransitionSpeed);
 
-  const entering = FadeIn.duration(slideTransitionSpeed);
-  const exiting = FadeOut.duration(slideTransitionSpeed);
-
   const handleNext = () => {
+    setFadeOutAndNext();
+  };
+
+  const setFadeOutAndNext = () => {
+    fadeAnim.setValue(0);
     setCurrentIndex((prev) => (prev + 1) % slides.length);
   };
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: slideTransitionSpeed,
+      useNativeDriver: true,
+    }).start();
+  }, [currentIndex, slideTransitionSpeed]);
 
   const slideContent = (type: string | null) => {
     if (!type) {
@@ -77,7 +87,7 @@ export default function SlideShow({ slides }: SlideShowProps) {
     <View>
       <ThemedView>
         {isReady ? (
-          <Animated.View entering={entering} exiting={exiting} key={currentSlide.id}>
+          <Animated.View style={{ opacity: fadeAnim }} key={currentSlide.id}>
             {slideContent(currentSlide.type)}
           </Animated.View>
         ) : (
