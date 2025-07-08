@@ -2,9 +2,9 @@ import CustomSplashScreen from "@/components/SplashScreen";
 import { loadAppConfig } from "@/constants/Config";
 import useBroadcastPresence from "@/hooks/useBroadcastPresence";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
-import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import * as Device from "expo-device";
 import { useFonts } from "expo-font";
+import { useKeepAwake } from "expo-keep-awake";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
@@ -15,6 +15,8 @@ const isAndroid12OrAbove = Device.platformApiLevel && Device.platformApiLevel >=
 
 export default function RootLayout() {
   const [showCustomSplash, setShowCustomSplash] = useState(true);
+
+  useKeepAwake();
 
   const [loaded, error] = useFonts({
     PretendardRegular: require("../assets/fonts/Pretendard-Regular.ttf"),
@@ -68,13 +70,11 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={DarkTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="slide" options={{ headerShown: false }} />
-        <Stack.Screen name="setting" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" options={{ headerShown: false }} />
-      </Stack>
-    </ThemeProvider>
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="slide" options={{ headerShown: false }} />
+      <Stack.Screen name="setting" options={{ headerShown: false }} />
+      <Stack.Screen name="+not-found" options={{ headerShown: false }} />
+    </Stack>
   );
 }
