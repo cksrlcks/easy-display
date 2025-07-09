@@ -6,7 +6,6 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import useBackModal from "@/hooks/useBackModal";
 import useScreenData from "@/hooks/useScreenData";
-import { useKeepAwake } from "expo-keep-awake";
 import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 
@@ -14,8 +13,6 @@ export default function Slide() {
   const { slides, error, isLoading, getScreenData } = useScreenData();
   const { visible, onClose } = useBackModal();
   const router = useRouter();
-
-  useKeepAwake();
 
   const backModalMenus = [
     {
@@ -55,7 +52,7 @@ export default function Slide() {
       );
     }
 
-    if (slides.length > 0) {
+    if (!isLoading && slides.length > 0) {
       return <SlideShow slides={slides} />;
     }
   };

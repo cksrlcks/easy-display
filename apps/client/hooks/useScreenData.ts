@@ -17,6 +17,8 @@ export default function useScreenData() {
     try {
       setError(null);
       setIsLoading(true);
+      setData(null);
+
       const response = await fetch(`http://${hostIp}/get-screen-data?deviceId=${deviceId}`);
       const result = await response.json();
       if (!response.ok) {
