@@ -5,8 +5,30 @@ body {
   @apply bg-black text-white selection:text-white selection:bg-gray-800;
 }
 
+.global-padding {
+  @apply px-5 md:px-20;
+}
+
+/* Typography */
+
+h2 {
+  @apply text-lg md:text-xl font-semibold mb-4;
+}
+
+h3 {
+  @apply text-base md:text-lg font-semibold mb-4;
+}
+
 p {
   @apply text-gray-500;
+}
+
+p + p {
+  @apply mt-2;
+}
+
+b {
+  @apply font-semibold text-white;
 }
 
 .wrap-pretty {
