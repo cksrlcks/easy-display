@@ -1,2 +1,6 @@
 @import "tailwindcss";
 @import "@repo/tailwind-config";
+
+body {
+  @apply bg-black text-white;
+}
