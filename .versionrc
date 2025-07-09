@@ -1,0 +1,14 @@
+{
+  "types": [
+    {
+      "type": "feat",
+      "section": "Features",
+      "hidden": false
+    },
+    {
+      "type": "fix",
+      "section": "Fixes",
+      "hidden": false
+    }
+  ]
+}
