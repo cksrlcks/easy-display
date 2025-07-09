@@ -2,5 +2,13 @@
 @import "@repo/tailwind-config";
 
 body {
-  @apply bg-black text-white;
+  @apply bg-black text-white selection:text-white selection:bg-gray-800;
+}
+
+p {
+  @apply text-gray-500;
+}
+
+.wrap-pretty {
+  text-wrap: pretty;
 }
