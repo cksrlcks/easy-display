@@ -113,9 +113,6 @@ importers:
       react-native-qrcode-svg:
         specifier: ^6.3.15
         version: 6.3.15(react-native-svg@15.11.2(react-native-tvos@0.79.2-0)(react@19.0.0))(react-native-tvos@0.79.2-0)(react@19.0.0)
-      react-native-reanimated:
-        specifier: ~3.17.4
-        version: 3.17.5(@babel/core@7.28.0)(react-native-tvos@0.79.2-0)(react@19.0.0)
       react-native-safe-area-context:
         specifier: 5.3.0
         version: 5.3.0(react-native-tvos@0.79.2-0)(react@19.0.0)
@@ -7919,6 +7916,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.0
       '@babel/helper-plugin-utils': 7.27.1
+    optional: true
 
   '@babel/plugin-transform-typescript@7.28.0(@babel/core@7.28.0)':
     dependencies:
@@ -13699,6 +13697,7 @@ snapshots:
     dependencies:
       react: 19.0.0
       react-native: react-native-tvos@0.79.2-0(@babel/core@7.28.0)(@types/react@19.0.0)(react-native-tvos@0.79.2-0)(react@19.0.0)
+    optional: true
 
   react-native-is-edge-to-edge@1.2.1(react-native-tvos@0.79.2-0)(react@19.0.0):
     dependencies:
@@ -13733,6 +13732,7 @@ snapshots:
       react-native-is-edge-to-edge: 1.1.7(react-native-tvos@0.79.2-0)(react@19.0.0)
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   react-native-safe-area-context@5.3.0(react-native-tvos@0.79.2-0)(react@19.0.0):
     dependencies:
