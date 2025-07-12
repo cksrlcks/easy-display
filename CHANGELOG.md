@@ -1,4 +1,11 @@
-# Changelog
+# ✨ 변경 이력
+### [1.0.2](https://github.com/cksrlcks/easy-display-turbo/compare/v1.0.1...v1.0.2) (2025-07-12)
+
+
+### Fixes
+
+* tablet os fix ([#9](https://github.com/cksrlcks/easy-display-turbo/issues/9)) ([43871f9](https://github.com/cksrlcks/easy-display-turbo/commit/43871f943e3217c1bae6e40d8a139f86cd90988f))
+* test-desing-fix([#10](https://github.com/cksrlcks/easy-display-turbo/issues/10)) ([cf9e854](https://github.com/cksrlcks/easy-display-turbo/commit/cf9e85438a0b66719d0d21e1148f31bf1f7cce92))
 
 ### 1.0.1 (2025-07-09)
 

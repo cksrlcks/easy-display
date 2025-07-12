@@ -1,6 +1,6 @@
 {
   "name": "easy-display",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -10,7 +10,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky",
     "lint-staged": "lint-staged",
-    "release": "standard-version --skip.tag && node scripts/sync-version.js && git add . && git commit -m \"chore(release): sync all versions\" && git tag v$(node -p \"require('./package.json').version\")"
+    "release": "standard-version --skip.tag && node sync-version.js && git add . && git commit -m \"chore(release): sync all versions\" && git tag v$(node -p \"require('./package.json').version\")"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
