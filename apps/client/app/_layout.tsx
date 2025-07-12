@@ -5,7 +5,9 @@ import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import * as Device from "expo-device";
 import { useFonts } from "expo-font";
 import { useKeepAwake } from "expo-keep-awake";
+import * as NavigationBar from "expo-navigation-bar";
 import { Stack } from "expo-router";
+import * as ScreenOrientation from "expo-screen-orientation";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 
@@ -54,6 +56,18 @@ export default function RootLayout() {
       }
     })();
   }, [loaded, error, setConfig]);
+
+  useEffect(() => {
+    (async function lockScreenOrientation() {
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async function hideNavigationBar() {
+      await NavigationBar.setVisibilityAsync("hidden");
+    })();
+  }, []);
 
   if (!loaded && !error) {
     return null;
