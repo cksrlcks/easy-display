@@ -1,18 +1,20 @@
 # Changelog
 
-## [1.0.1] - 2025-07-09
+### 1.0.1 (2025-07-09)
 
-### Fixed
+### Fixes
 
 - 크롬캐스트 앱꺼짐 현상 수정
 
-### Added
+### Features
 
 - web 랜딩페이지 추가
 
-## [1.0.0] - 2025-07-07
+### 1.0.0(2025-07-07)
 
-### PC용 Host 앱 (Windows/macOS)
+### Features
+
+#### PC용 Host 앱 (Windows/macOS)
 
 - 이미지 및 영상 파일 등록 기능 (미디어 관리)
 - 슬라이드쇼 구성 및 스크린 단위 관리
@@ -20,7 +22,7 @@
 - 각 디바이스에 스크린 연결 및 송출 제어
 - Host 이름 및 통신 포트 변경 기능 추가
 
-### Android TV용 Client 앱
+#### Android TV용 Client 앱
 
 - 로컬 네트워크에서 Host PC 자동 탐색
 - Host로부터 스크린 수신 후 슬라이드쇼 재생
