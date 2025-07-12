@@ -53,7 +53,7 @@ export default function Discovery() {
 
   return (
     <FlatList
-      contentContainerStyle={{ flexGrow: 1, justifyContent: "center", padding: 30 }}
+      contentContainerStyle={{ flexGrow: 1, justifyContent: "center", padding: 30, gap: 20 }}
       data={hostList}
       renderItem={({ item }) => <HostButton host={item} onPress={handleHostItemPress} />}
     />
