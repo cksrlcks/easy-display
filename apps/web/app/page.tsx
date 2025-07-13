@@ -1,11 +1,12 @@
 import Footer from "@/components/Footer";
 import IntroButton from "@/components/IntroButton";
 import Logo from "@/components/Logo";
+import { Menu } from "@/type";
 import { Book, HardDriveDownload } from "lucide-react";
 
 const INTRO_LINKS = [
   {
-    href: "https://github.com/cksrlcks/easy-display/releases/latest",
+    href: "/download",
     icon: <HardDriveDownload />,
     label: "다운로드",
   },
@@ -14,7 +15,7 @@ const INTRO_LINKS = [
     icon: <Book />,
     label: "이용 가이드",
   },
-];
+] as Menu[];
 
 export default function Page() {
   return (

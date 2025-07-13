@@ -2,7 +2,7 @@
 @import "@repo/tailwind-config";
 
 body {
-  @apply bg-black text-white selection:text-white selection:bg-gray-800;
+  @apply bg-black text-gray-500 selection:text-white selection:bg-gray-800;
 }
 
 .global-padding {
@@ -12,11 +12,11 @@ body {
 /* Typography */
 
 h2 {
-  @apply text-lg md:text-xl font-semibold mb-4;
+  @apply text-lg md:text-xl font-semibold mb-4 text-white;
 }
 
 h3 {
-  @apply text-base md:text-lg font-semibold mb-4;
+  @apply text-base md:text-lg font-semibold mb-4 text-white;
 }
 
 p {
