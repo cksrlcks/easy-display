@@ -29,7 +29,7 @@ export const Tabs = ({ defaultValue, children }: PropsWithChildren<{ defaultValu
 };
 
 export const TabList = ({ children }: PropsWithChildren) => {
-  return <ul className="flex items-center mb-10">{children}</ul>;
+  return <ul className="flex items-stretch mb-10">{children}</ul>;
 };
 
 export const TabButton = ({ value, children }: PropsWithChildren<{ value: string }>) => {

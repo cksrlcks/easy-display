@@ -21,8 +21,12 @@ export default function GuidePage() {
       <div>
         <Tabs defaultValue="host">
           <TabList>
-            <TabButton value="host">HOST (PC or Mac)</TabButton>
-            <TabButton value="client">Client (Android TV App)</TabButton>
+            <TabButton value="host">
+              HOST <br className="block md:hidden" /> (PC or Mac)
+            </TabButton>
+            <TabButton value="client">
+              Client <br className="block md:hidden" /> (Android TV App)
+            </TabButton>
           </TabList>
           <TabContent value="host">
             <Section>
