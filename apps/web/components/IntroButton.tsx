@@ -12,7 +12,7 @@ type ButtonContentProps = {
 };
 
 const linkClassName =
-  "flex items-center border-b-2 border-white/20 py-6 gap-4 hover:border-white/80 transition-colors group";
+  "flex items-center border-b-2 border-white/20 py-6 gap-4 hover:border-white/80 transition-colors group text-white";
 const iconClassName = "opacity-32 group-hover:opacity-100 transition-opacity";
 const arrowRightClassName = "ml-auto";
 

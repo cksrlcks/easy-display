@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 
 const PageHeader = ({ children }: PropsWithChildren) => {
-  return <div className="space-y-2 mb-10 border-b pb-6 border-white/10">{children}</div>;
+  return <div className="space-y-2 mb-16">{children}</div>;
 };
 
 const Title = ({ children }: PropsWithChildren) => {
